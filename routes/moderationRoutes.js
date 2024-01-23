@@ -2,6 +2,7 @@ const express = require('express');
 const { body, validationResult } = require('express-validator');
 const { Report, Debate } = require('../model'); // Adjust paths as needed
 const { authenticate } = require('../middleware/authMiddleware');
+const { isModerator } = require('../middleware/isModerator');
 
 const router = express.Router();
 
@@ -28,8 +29,6 @@ router.post('/report', [authenticate, body('targetId').isInt(), body('reason').n
         return res.status(500).json({ message: 'Error submitting report.' });
     }
 });
-
-// Continuing in routes/moderationRoutes.js
 
 router.post('/report/:id/review', [authenticate, isModerator], async (req, res) => { // isModerator middleware checks if the user is a moderator
     const { id } = req.params;

@@ -3,17 +3,18 @@
 const fs = require('fs');
 const path = require('path');
 const Sequelize = require('sequelize');
-const process = require('process');
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
-const config = require(__dirname + '/../config/config.json')[env];
+const config = require(__dirname + '/../config/config.js')[env];
 const db = {};
 
 let sequelize;
 if (config.use_env_variable) {
+  // This part is usually not used when you're setting individual parts of the connection string (host, database, etc.)
   sequelize = new Sequelize(process.env[config.use_env_variable], config);
 } else {
-  sequelize = new Sequelize(config.database, config.username, config.password, config);
+  // Here, Sequelize is initialized without username and password for Windows Authentication
+  sequelize = new Sequelize(config.database, null, null, config);
 }
 
 fs
@@ -23,7 +24,7 @@ fs
       file.indexOf('.') !== 0 &&
       file !== basename &&
       file.slice(-3) === '.js' &&
-      file.indexOf('.test.js') === -1
+      file.indexOf('.test.js') === -1 // assuming you want to exclude test files
     );
   })
   .forEach(file => {

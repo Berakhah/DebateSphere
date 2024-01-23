@@ -88,24 +88,24 @@ router.post('/login', async (req, res) => {
 const nodemailer = require('nodemailer');
 
 // Function to send verification email
-async function sendVerificationEmail(user, req) {
-    const transporter = nodemailer.createTransport({
-        service: 'gmail', // Use your preferred service
-        auth: {
-            user: process.env.EMAIL_USERNAME,
-            pass: process.env.EMAIL_PASSWORD,
-        },
-    });
+// async function sendVerificationEmail(user, req) {
+//     const transporter = nodemailer.createTransport({
+//         service: 'gmail', // Use your preferred service
+//         auth: {
+//             user: process.env.EMAIL_USERNAME,
+//             pass: process.env.EMAIL_PASSWORD,
+//         },
+//     });
 
-    const mailOptions = {
-        from: process.env.EMAIL_USERNAME,
-        to: user.Email,
-        subject: 'Verify Your Email',
-        text: `Please click this link to verify your email: ${req.protocol}://${req.get('host')}/api/auth/verify-email?token=${user.VerificationToken}`
-    };
+//     const mailOptions = {
+//         from: process.env.EMAIL_USERNAME,
+//         to: user.Email,
+//         subject: 'Verify Your Email',
+//         text: `Please click this link to verify your email: ${req.protocol}://${req.get('host')}/api/auth/verify-email?token=${user.VerificationToken}`
+//     };
 
-    await transporter.sendMail(mailOptions);
-}
+//     await transporter.sendMail(mailOptions);
+// }
 
 // Endpoint to verify the user's email
 router.get('/verify-email', async (req, res) => {

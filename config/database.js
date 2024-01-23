@@ -1,20 +1,21 @@
 const Sequelize = require('sequelize');
 
 // Sequelize connection
-const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASSWORD, {
-    host: process.env.DB_SERVER,
+const sequelize = new Sequelize(process.env.DB_NAME, null, null, {
+    host: process.env.DB_HOST,
     dialect: 'mssql',
+    dialectOptions: {
+        options: {
+            encrypt: false,
+            trustServerCertificate: true, // for local development
+            trustedConnection: true // use this for Windows Authentication
+        }
+    },
     pool: {
         max: 10,
         min: 0,
         idle: 30000
     },
-    dialectOptions: {
-        options: {
-            encrypt: true, // for Azure SQL
-            trustServerCertificate: true // for local development
-        }
-    }
 });
 
 // Test the connection

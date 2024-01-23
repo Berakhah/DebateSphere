@@ -1,7 +1,7 @@
 const express = require('express');
 const { body, validationResult } = require('express-validator');
 const Debate = require('../model/debate'); // Make sure the path is correct. It might be '../models/debate' if your models are in a models folder.
-const { authenticate } = require('../middleware/authMiddleware');
+const { authenticate, checkDebateOwnership } = require('../middleware/authMiddleware');
 const { isContentAppropriate } = require('../utilities/contentFilter'); 
 const router = express.Router();
 

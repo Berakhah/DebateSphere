@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const { Debate } = require('../models'); // Correct the path as necessary
 
 const authenticate = (req, res, next) => {
     const authHeader = req.headers['authorization'];
@@ -18,4 +19,26 @@ const authenticate = (req, res, next) => {
     });
 };
 
-module.exports = authenticate;
+// Middleware to check if the logged-in user is the owner of the debate
+const checkDebateOwnership = async (req, res, next) => {
+    try {
+        const debate = await Debate.findByPk(req.params.debateId);
+
+        if (!debate) {
+            return res.status(404).send({ message: "Debate not found." });
+        }
+
+        if (debate.creatorUserId !== req.user.id) {
+            return res.status(403).send({ message: "User is not authorized to perform this action." });
+        }
+
+        // Attach the debate to the request object if further operations need it
+        req.debate = debate;
+        next();
+    } catch (error) {
+        console.error('Error checking debate ownership:', error);
+        res.status(500).send({ message: "Internal server error." });
+    }
+};
+
+module.exports = { authenticate, checkDebateOwnership };
