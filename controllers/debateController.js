@@ -1,12 +1,35 @@
 // controllers/debateController.js
 
-const { Debate } = require('../model/debate');
+const { Debate } = require('../models/debate');
 const { isContentAppropriate } = require('../utilities/contentFilter');
 const { Op } = require('sequelize');
 
 const debateController = {
-    // Existing code for creating a debate
+    
+    createDebate: async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
 
+        if (!isContentAppropriate(req.body.description)) {
+            return res.status(400).json({ message: "Content includes prohibited keywords." });
+        }
+
+        try {
+            const debate = await Debate.create({
+                ...req.body,
+                CreatorUserID: req.user.id // Assuming 'req.user.id' is correctly populated from the JWT strategy
+            });
+
+            // Emit an event for the newly created debate
+            req.app.get('io').emit('debateCreated', debate);
+
+            res.status(201).json(debate);
+        } catch (error) {
+            res.status(500).json({ message: "Error creating debate.", error: error.message });
+        }
+    },
     // Update a debate
     updateDebate: async (req, res) => {
         try {

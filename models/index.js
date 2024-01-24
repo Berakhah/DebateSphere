@@ -10,32 +10,37 @@ const db = {};
 
 let sequelize;
 if (config.use_env_variable) {
-  // This part is usually not used when you're setting individual parts of the connection string (host, database, etc.)
-  sequelize = new Sequelize(process.env[config.use_env_variable], config);
+    sequelize = new Sequelize(process.env[config.use_env_variable], config);
 } else {
-  // Here, Sequelize is initialized without username and password for Windows Authentication
-  sequelize = new Sequelize(config.database, null, null, config);
+    sequelize = new Sequelize(config.database, config.username, config.password, config);
 }
 
-fs
-  .readdirSync(__dirname)
-  .filter(file => {
-    return (
-      file.indexOf('.') !== 0 &&
-      file !== basename &&
-      file.slice(-3) === '.js' &&
-      file.indexOf('.test.js') === -1 // assuming you want to exclude test files
-    );
-  })
-  .forEach(file => {
-    const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
-    db[model.name] = model;
-  });
+fs.readdirSync(__dirname)
+    .filter(file => {
+        return (
+            file.indexOf('.') !== 0 && 
+            file !== basename && 
+            file.slice(-3) === '.js' &&
+            file !== 'debateCategory.js' && // Exclude the junction table file here, we'll require it manually below
+            file !== 'category.js' // Exclude the category model file here, we'll require it manually below
+        );
+    })
+    .forEach(file => {
+        const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
+        db[model.name] = model;
+    });
+
+// Manually require the junction table and category model
+const categoryModel = require('./category')(sequelize, Sequelize.DataTypes);
+db[categoryModel.name] = categoryModel;
+
+const debateCategoryModel = require('./debateCategory')(sequelize, Sequelize.DataTypes);
+db[debateCategoryModel.name] = debateCategoryModel;
 
 Object.keys(db).forEach(modelName => {
-  if (db[modelName].associate) {
-    db[modelName].associate(db);
-  }
+    if (db[modelName].associate) {
+        db[modelName].associate(db);
+    }
 });
 
 db.sequelize = sequelize;

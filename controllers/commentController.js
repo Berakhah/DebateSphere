@@ -1,5 +1,5 @@
-const { Comment } = require('../model/comment'); // Make sure the path is correct
-const { User } = require('../model/user'); // Make sure the path is correct
+const { Comment } = require('../models/comment'); // Make sure the path is correct
+const { User } = require('../models/user'); // Make sure the path is correct
 
 // Controller for posting a comment
 exports.postComment = async (req, res) => {

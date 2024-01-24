@@ -1,4 +1,4 @@
-const { Report, Debate } = require('../model'); // Adjust the path as necessary
+const { Report, Debate } = require('../models'); // Adjust the path as necessary
 const { validationResult } = require('express-validator');
 
 const createReport = async (req, res) => {

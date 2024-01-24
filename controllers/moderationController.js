@@ -1,6 +1,6 @@
 // controllers/moderationController.js
 const { body, validationResult } = require('express-validator');
-const { Report, Debate } = require('../model'); // Adjust paths as needed
+const { Report, Debate } = require('../models'); // Adjust paths as needed
 
 const createReport = async (req, res) => {
     const errors = validationResult(req);

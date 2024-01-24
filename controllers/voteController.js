@@ -1,5 +1,5 @@
 // controllers/voteController.js
-const { Vote, Debate, User } = require('../model'); // Adjust the path if needed
+const { Vote, Debate, User } = require('../models'); // Adjust the path if needed
 
 const submitVote = async (req, res) => {
     const { voteType } = req.body; // 'upvote' or 'downvote'
