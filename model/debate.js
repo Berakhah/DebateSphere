@@ -1,3 +1,5 @@
+// model/debate.js
+
 const { Model, DataTypes } = require('sequelize');
 
 class Debate extends Model {}
