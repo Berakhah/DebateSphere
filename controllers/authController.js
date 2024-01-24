@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const { body, validationResult } = require('express-validator');
-const { User } = require('../models/user'); // Adjust this path to match your project structure
+const { User } = require('../model/user'); // Ensure this path correctly points to your User model
 const { sendVerificationEmail } = require('../utilities/emailSender');
 const jwt = require('jsonwebtoken');
 
@@ -15,10 +15,10 @@ const register = async (req, res) => {
     // Check if the email already exists
     const existingUser = await User.findOne({ where: { email: req.body.email } });
     if (existingUser) {
-        return res.status(409).json({ message: 'Email already in use' });
+        return res.status(409).json({ message: 'Email already in use' }); // 409 Conflict for duplicate resource
     }
 
-    // Hash password with bcrypt
+    // Hash password
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
     // Generate a verification token
@@ -30,10 +30,10 @@ const register = async (req, res) => {
             name: req.body.name,
             email: req.body.email,
             password: hashedPassword,
-            role: req.body.role || 'user', // Default role
-            profileInformation: req.body.profileInformation || '',
+            role: req.body.role || 'user', // Assign 'user' as the default role if not specified
+            profileInformation: req.body.profileInformation || '', // Handle optional fields gracefully
             verificationToken: verificationToken,
-            verified: false // User is not verified until they click the email link
+            verified: false // Set verified to false until the email is verified
         });
 
         // Construct the verification link
@@ -44,7 +44,7 @@ const register = async (req, res) => {
 
         res.status(201).json({ message: "Registration successful. Please check your email to verify your account." });
     } catch (error) {
-        console.error("Registration error:", error);
+        console.error("Registration error:", error); // Logging the error to the console for debugging
         res.status(500).json({ message: "An error occurred during registration." });
     }
 };
@@ -63,9 +63,8 @@ const login = async (req, res) => {
         return res.status(401).send({ error: "Login failed! Incorrect password." });
     }
 
-    // Sign JWT
     const token = jwt.sign({ id: user.UserID, role: user.Role }, process.env.JWT_SECRET, {
-        expiresIn: 86400 // 24 hours
+        expiresIn: 86400 // expires in 24 hours
     });
 
     res.status(200).send({
@@ -89,7 +88,7 @@ const verifyEmail = async (req, res) => {
 
         // Update the user as verified
         user.Verified = true;
-        user.VerificationToken = null; // Clear the token post-verification
+        user.VerificationToken = null; // Clear the verification token after successful verification
         await user.save();
 
         res.send('Email verified successfully. Your account is now active.');

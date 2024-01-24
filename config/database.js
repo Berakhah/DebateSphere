@@ -7,7 +7,7 @@ const sequelize = new Sequelize(process.env.DB_NAME, null, null, {
     dialectOptions: {
         options: {
             encrypt: false,
-            trustServerCertificate: true, // for local development
+            trustServerCertificate: false, // for local development
             trustedConnection: true // use this for Windows Authentication
         }
     },
