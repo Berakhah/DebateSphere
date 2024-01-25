@@ -14,9 +14,27 @@ module.exports = {
     }
   },
   "test": {
-    // Similar configuration for test environment
+    "database": process.env.DB_NAME,
+    "host": process.env.DB_HOST,
+    "dialect": "mssql",
+    "dialectOptions": {
+      "options": {
+        "encrypt": true,
+        "enableArithAbort": true,
+        "trustedConnection": true
+      }
+    }
   },
   "production": {
-    // Similar configuration for production environment
+    "database": process.env.DB_NAME,
+    "host": process.env.DB_HOST,
+    "dialect": "mssql",
+    "dialectOptions": {
+      "options": {
+        "encrypt": true,
+        "enableArithAbort": true,
+        "trustedConnection": true
+      }
+    }
   }
 };

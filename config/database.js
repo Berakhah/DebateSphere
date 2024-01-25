@@ -3,6 +3,7 @@ const Sequelize = require('sequelize');
 // Sequelize connection
 const sequelize = new Sequelize(process.env.DB_NAME, null, null, {
     host: process.env.DB_HOST,
+    port: 1433,
     dialect: 'mssql',
     dialectOptions: {
         options: {
