@@ -13,7 +13,7 @@ module.exports = (sequelize) => {
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
-                model: 'Debates', // Ensure this matches your Debate model table name
+                model: 'Debate', // Ensure this matches your Debate model table name
                 key: 'debateId'
             }
         },
@@ -21,14 +21,14 @@ module.exports = (sequelize) => {
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
-                model: 'Categories', // Ensure this matches your Category model table name
+                model: 'Category', // Ensure this matches your Category model table name
                 key: 'categoryId'
             }
         }
     }, {
         sequelize,
         modelName: 'DebateCategory',
-        tableName: 'DebateCategories' // Ensure this matches your actual SQL table name
+        tableName: 'DebateCategory' // Ensure this matches your actual SQL table name
     });
     return DebateCategory;
 };

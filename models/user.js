@@ -11,7 +11,7 @@ const User = (sequelize, DataTypes) => {
         verificationToken: DataTypes.STRING,
     }, {
         timestamps: false,
-        tableName: 'Users' // Ensure this matches your actual SQL table name
+        tableName: 'User' // Ensure this matches your actual SQL table name
     });
 };
 module.exports = User;

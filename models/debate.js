@@ -42,7 +42,7 @@ module.exports = (sequelize) => {
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
-                model: 'Users', // This should match the table name exactly
+                model: 'User', // This should match the table name exactly
                 key: 'userId'
             },
             field: 'CreatorUserID'
@@ -50,7 +50,7 @@ module.exports = (sequelize) => {
     }, {
         sequelize,
         modelName: 'Debate',
-        tableName: 'Debates', // Ensure this matches your actual SQL table name
+        tableName: 'Debate', // Ensure this matches your actual SQL table name
         timestamps: false
     });
 

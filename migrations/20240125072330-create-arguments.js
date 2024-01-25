@@ -1,8 +1,8 @@
 'use strict';
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('Votes', {
-      voteId: {
+    await queryInterface.createTable('Argument', {
+      argumentId: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
@@ -12,25 +12,29 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'Debates',
+          model: 'Debate',
           key: 'debateId'
         }
       },
-      userId: {
+      authorUserId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'Users',
+          model: 'User',
           key: 'userId'
         }
       },
-      voteType: {
-        type: Sequelize.STRING(50),
+      content: {
+        type: Sequelize.TEXT,
         allowNull: false
+      },
+      timestamp: {
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.NOW
       }
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('Votes');
+    await queryInterface.dropTable('Argument');
   }
 };

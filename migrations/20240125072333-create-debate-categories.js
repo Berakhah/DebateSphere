@@ -1,26 +1,28 @@
 'use strict';
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('DebateCategories', {
+    await queryInterface.createTable('DebateCategory', {
       debateId: {
         type: Sequelize.INTEGER,
-        primaryKey: true,
+        allowNull: false,
         references: {
-          model: 'Debates',
+          model: 'Debate',
           key: 'debateId'
-        }
+        },
+        primaryKey: true
       },
       categoryId: {
         type: Sequelize.INTEGER,
-        primaryKey: true,
+        allowNull: false,
         references: {
-          model: 'Categories',
+          model: 'Category',
           key: 'categoryId'
-        }
+        },
+        primaryKey: true
       }
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('DebateCategories');
+    await queryInterface.dropTable('DebateCategory');
   }
 };

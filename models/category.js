@@ -16,7 +16,7 @@ module.exports = (sequelize) => {
     }, {
         sequelize,
         modelName: 'Category',
-        tableName: 'Categories' 
+        tableName: 'Category' 
     });
 
     Category.associate = (models) => {

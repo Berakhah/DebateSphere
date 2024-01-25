@@ -26,7 +26,7 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: false
         }
     }, {
-        tableName: 'Reports'
+        tableName: 'Report'
     });
 
     return Report;
