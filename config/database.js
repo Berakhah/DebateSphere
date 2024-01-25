@@ -1,17 +1,12 @@
 const Sequelize = require('sequelize');
+const config = require('./config/config.js')[process.env.NODE_ENV || 'development'];
 
 // Sequelize connection
-const sequelize = new Sequelize(process.env.DB_NAME, null, null, {
-    host: process.env.DB_HOST,
-    port: 1433,
+const sequelize = new Sequelize(config.database, config.username, config.password, {
+    host: config.host,
+    port: config.port,
     dialect: 'mssql',
-    dialectOptions: {
-        options: {
-            encrypt: false,
-            trustServerCertificate: false, // for local development
-            trustedConnection: true // use this for Windows Authentication
-        }
-    },
+    dialectOptions: config.dialectOptions,
     pool: {
         max: 10,
         min: 0,
