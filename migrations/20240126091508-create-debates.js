@@ -9,25 +9,25 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       title: {
-        type: Sequelize.STRING(255),
-        allowNull: false
+        allowNull: false,
+        type: Sequelize.STRING
       },
       description: {
-        type: Sequelize.TEXT,
-        allowNull: false
+        allowNull: false,
+        type: Sequelize.TEXT
       },
       dateTime: {
-        type: Sequelize.DATE,
-        allowNull: false
+        allowNull: false,
+        type: Sequelize.DATE
       },
       status: {
-        type: Sequelize.STRING(50),
         allowNull: false,
+        type: Sequelize.STRING,
         defaultValue: 'Scheduled'
       },
       topicCategory: {
-        type: Sequelize.STRING(100),
-        allowNull: false
+        allowNull: false,
+        type: Sequelize.STRING
       },
       creatorUserId: {
         type: Sequelize.INTEGER,
@@ -35,7 +35,9 @@ module.exports = {
         references: {
           model: 'User',
           key: 'userId'
-        }
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       }
     });
   },

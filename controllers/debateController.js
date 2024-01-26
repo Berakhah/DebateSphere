@@ -1,11 +1,12 @@
 // controllers/debateController.js
 
-const { Debate } = require('../models/debate');
+const { Debate, Comment } = require('../models/debate');
+const { isFuture, parseISO } = require('date-fns');
 const { isContentAppropriate } = require('../utilities/contentFilter');
+const { validationResult } = require('express-validator');
 const { Op } = require('sequelize');
 
 const debateController = {
-    
     createDebate: async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -14,6 +15,12 @@ const debateController = {
 
         if (!isContentAppropriate(req.body.description)) {
             return res.status(400).json({ message: "Content includes prohibited keywords." });
+        }
+
+        const { dateTime } = req.body;
+        const parsedDateTime = parseISO(dateTime);
+        if (!isFuture(parsedDateTime)) {
+            return res.status(400).json({ message: "The debate must be scheduled for a future date and time." });
         }
 
         try {

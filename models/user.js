@@ -10,7 +10,7 @@ const User = (sequelize, DataTypes) => {
         verified: DataTypes.BOOLEAN,
         verificationToken: DataTypes.STRING,
     }, {
-        timestamps: false,
+        timestamps: true,
         tableName: 'User' // Ensure this matches your actual SQL table name
     });
 };

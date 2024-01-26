@@ -14,29 +14,34 @@ module.exports = {
         references: {
           model: 'User',
           key: 'userId'
-        }
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       targetUserId: {
         type: Sequelize.INTEGER,
-        allowNull: true,
         references: {
           model: 'User',
           key: 'userId'
-        }
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL'
       },
       targetDebateId: {
         type: Sequelize.INTEGER,
-        allowNull: true,
         references: {
           model: 'Debate',
           key: 'debateId'
-        }
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL'
       },
       actionType: {
         type: Sequelize.STRING(50),
         allowNull: false
       },
       timestamp: {
+        allowNull: false,
         type: Sequelize.DATE,
         defaultValue: Sequelize.NOW
       }

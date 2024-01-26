@@ -1,36 +1,42 @@
 'use strict';
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('Vote', {
-      voteId: {
+    await queryInterface.createTable('Report', {
+      id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      debateId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'Debate',
-          key: 'debateId'
-        }
+      type: {
+        type: Sequelize.STRING,
+        allowNull: false
       },
-      userId: {
+      targetId: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
+      reporterId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
           model: 'User',
           key: 'userId'
-        }
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
-      voteType: {
-        type: Sequelize.STRING(50),
+      reason: {
+        type: Sequelize.TEXT,
         allowNull: false
+      },
+      reviewed: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
       }
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('Vote');
+    await queryInterface.dropTable('Report');
   }
 };

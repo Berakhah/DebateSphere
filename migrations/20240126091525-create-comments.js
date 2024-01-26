@@ -1,8 +1,8 @@
 'use strict';
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('Argument', {
-      argumentId: {
+    await queryInterface.createTable('Comment', {
+      commentId: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
@@ -14,27 +14,37 @@ module.exports = {
         references: {
           model: 'Debate',
           key: 'debateId'
-        }
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
-      authorUserId: {
+      userId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
           model: 'User',
           key: 'userId'
-        }
+        },
+        onUpdate: 'NO ACTION',
+        onDelete: 'NO ACTION'
+      },
+      parentId: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        references: {
+          model: 'Comment',
+          key: 'commentId'
+        },
+        onUpdate: 'NO ACTION',
+        onDelete: 'NO ACTION'
       },
       content: {
-        type: Sequelize.TEXT,
-        allowNull: false
-      },
-      timestamp: {
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.NOW
+        allowNull: false,
+        type: Sequelize.TEXT
       }
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('Argument');
+    await queryInterface.dropTable('Comment');
   }
 };

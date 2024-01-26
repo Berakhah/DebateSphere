@@ -1,23 +1,32 @@
-const { Comment } = require('../models/comment'); // Make sure the path is correct
-const { User } = require('../models/user'); // Make sure the path is correct
+const { Comment } = require('../models');
+const { validationResult } = require('express-validator');
+const { isContentAppropriate } = require('../utilities/contentFilter');
 
-// Controller for posting a comment
-exports.postComment = async (req, res) => {
-    const { content } = req.body;
-    const { debateId } = req.params;
-    const userId = req.user.id; // Assuming `req.user` is set
+const commentController = {
+    postComment: async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
 
-    try {
-        const comment = await Comment.create({
-            debateId,
-            userId,
-            content
-        });
-        res.status(201).json(comment);
-    } catch (error) {
-        console.error('Error submitting comment:', error);
-        res.status(500).json({ message: 'Failed to submit comment.' });
-    }
+        const { content } = req.body;
+        if (!isContentAppropriate(content)) {
+            return res.status(400).json({ message: "Content includes prohibited keywords." });
+        }
+
+        try {
+            const comment = await Comment.create({
+                content,
+                debateId: req.params.debateId,
+                userId: req.user.id
+            });
+            res.status(201).json(comment);
+        } catch (error) {
+            res.status(500).json({ message: "Failed to submit comment.", error: error.message });
+        }
+    },
+
+    // Additional methods for comment moderation could be implemented here
 };
 
-// Add more controllers as needed
+module.exports = commentController;

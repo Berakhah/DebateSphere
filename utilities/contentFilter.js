@@ -1,8 +1,6 @@
 // utilities/contentFilter.js
-const prohibitedKeywords = ['inappropriate', 'bannedword'];
+const prohibitedPatterns = [/inappropriate/i, /bannedword/i];
 
-const isContentAppropriate = (text) => {
-    return !prohibitedKeywords.some(keyword => text.includes(keyword));
-};
+const isContentAppropriate = (text) => !prohibitedPatterns.some((pattern) => pattern.test(text));
 
 module.exports = { isContentAppropriate };

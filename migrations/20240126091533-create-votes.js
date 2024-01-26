@@ -1,8 +1,9 @@
 'use strict';
+
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('Comment', {
-      commentId: {
+    await queryInterface.createTable('Vote', {
+      voteId: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
@@ -12,29 +13,29 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'Debate',
+          model: 'Debate', // Note: Sequelize pluralizes table names
           key: 'debateId'
-        }
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       userId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'User',
+          model: 'User', // Note: Sequelize pluralizes table names
           key: 'userId'
-        }
+        },
+        onUpdate: 'NO ACTION',
+        onDelete: 'NO ACTION'
       },
-      content: {
-        type: Sequelize.TEXT,
+      voteType: {
+        type: Sequelize.STRING,
         allowNull: false
-      },
-      timestamp: {
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.NOW
       }
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('Comment');
+    await queryInterface.dropTable('Vote');
   }
 };

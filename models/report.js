@@ -7,7 +7,9 @@ module.exports = (sequelize, DataTypes) => {
         },
         type: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: false,
+            validate: {
+                isIn: [['Debate', 'Comment']]},
         },
         targetId: {
             type: DataTypes.INTEGER,
@@ -26,7 +28,8 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: false
         }
     }, {
-        tableName: 'Report'
+        tableName: 'Report',
+        timestamps: true,
     });
 
     return Report;
