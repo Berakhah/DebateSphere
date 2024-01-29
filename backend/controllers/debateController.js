@@ -3,7 +3,7 @@
 const { isFuture, parseISO } = require('date-fns');
 const { isContentAppropriate } = require('../utilities/contentFilter');
 const { validationResult } = require('express-validator');
-const { Op } = require('sequelize');
+const { Sequelize, Op } = require('sequelize'); // Correctly import Sequelize and Op
 const db = require('../models'); // Importing the database models
 
 const debateController = {
@@ -82,46 +82,12 @@ const debateController = {
             res.status(500).json({ message: "Error deleting debate.", error: error.message });
         }
     },
-    
-    // searchDebates: async (req, res) => {
-    //     const { keyword, status, startDate, endDate, category } = req.query;
-    //     try {
-    //         const conditions = {
-    //             [Op.and]: [
-    //                 keyword ? {
-    //                     [Op.or]: [
-    //                         { title: { [Op.iLike]: `%${keyword}%` } },
-    //                         { description: { [Op.iLike]: `%${keyword}%` } }
-    //                     ]
-    //                 } : {},
-    //                 status ? { status } : {},
-    //                 startDate && endDate ? {
-    //                     dateTime: {
-    //                         [Op.between]: [new Date(startDate), new Date(endDate)]
-    //                     }
-    //                 } : {},
-    //                 category ? { topicCategory: category } : {}
-    //             ]
-    //         };
-
-    //         const debates = await db.Debate.findAll({
-    //             where: conditions,
-    //             order: [['dateTime', 'DESC']]
-    //         });
-
-    //         res.json(debates);
-    //     } catch (error) {
-    //         console.error('Search error:', error);
-    //         res.status(500).send('Failed to perform search.');
-    //     }
-    // },
 
     searchDebates: async (req, res) => {
         const { keyword, status, startDate, endDate, category } = req.query;
         try {
             const conditions = {
                 [Op.and]: [
-                    // Use Sequelize.fn for case-insensitive search
                     keyword ? {
                         [Op.or]: [
                             Sequelize.where(
@@ -145,12 +111,12 @@ const debateController = {
                     category ? { topicCategory: category } : {}
                 ]
             };
-    
+
             const debates = await db.Debate.findAll({
                 where: conditions,
                 order: [['dateTime', 'DESC']]
             });
-    
+
             res.json(debates);
         } catch (error) {
             console.error('Search error:', error);
