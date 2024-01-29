@@ -11,9 +11,9 @@ router.post('/create', [
     body('topicCategory').not().isEmpty().withMessage('Topic category is required'),
 ], authenticate, debateController.createDebate);
 
-router.put('/update/:id', authenticate, checkDebateOwnership, debateController.updateDebate);
+router.put('/update/:debateId', authenticate, checkDebateOwnership, debateController.updateDebate);
 
-router.delete('/delete/:id', authenticate, checkDebateOwnership, debateController.deleteDebate);
+router.delete('/delete/:debateId', authenticate, checkDebateOwnership, debateController.deleteDebate);
 
 router.get('/search', debateController.searchDebates);
 

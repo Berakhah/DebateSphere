@@ -5,7 +5,6 @@ const { body, validationResult } = require('express-validator');
 const db = require('../models'); // Import the db object from Sequelize setup
 const { sendVerificationEmail } = require('../utilities/emailSender'); // Adjust path as needed
 const jwt = require('jsonwebtoken');
-
 class AuthRoutes {
     constructor() {
         this.router = express.Router();

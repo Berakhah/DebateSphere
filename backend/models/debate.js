@@ -51,7 +51,7 @@ module.exports = (sequelize) => {
         sequelize,
         modelName: 'Debate',
         tableName: 'Debate', // Ensure this matches your actual SQL table name
-            timestamps: true, // Enable Sequelize-managed timestamps
+            timestamps: false, // Enable Sequelize-managed timestamps
     indexes: [{ fields: ['creatorUserId'] }],
     });
 

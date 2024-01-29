@@ -1,13 +1,14 @@
 // controllers/debateController.js
 
-const { Debate, Comment } = require('../models/debate');
 const { isFuture, parseISO } = require('date-fns');
 const { isContentAppropriate } = require('../utilities/contentFilter');
 const { validationResult } = require('express-validator');
 const { Op } = require('sequelize');
+const db = require('../models'); // Importing the database models
 
 const debateController = {
     createDebate: async (req, res) => {
+        console.log('Creating debate with data:', req.body);
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
@@ -24,10 +25,12 @@ const debateController = {
         }
 
         try {
-            const debate = await Debate.create({
+            console.log('Attempting to create debate...');
+            const debate = await db.Debate.create({
                 ...req.body,
-                CreatorUserID: req.user.id // Assuming 'req.user.id' is correctly populated from the JWT strategy
+                creatorUserId: req.user.id // Assuming 'req.user.id' is correctly populated from the JWT strategy
             });
+            console.log('Debate created:', debate);
 
             // Emit an event for the newly created debate
             req.app.get('io').emit('debateCreated', debate);
@@ -37,51 +40,100 @@ const debateController = {
             res.status(500).json({ message: "Error creating debate.", error: error.message });
         }
     },
-    // Update a debate
+
     updateDebate: async (req, res) => {
+        const debateId = req.params.debateId;
+        console.log("Updating debate with ID:", debateId);
+    
         try {
-            const debate = await Debate.findByPk(req.params.id);
+            const debate = await db.Debate.findByPk(debateId);
             if (!debate) {
                 return res.status(404).send({ message: "Debate not found." });
             }
+    
             const updatedDebate = await debate.update(req.body);
-
+    
             // Emit an event for the updated debate
-            req.app.get('io').to(req.params.id).emit('debateUpdated', updatedDebate);
-
+            req.app.get('io').to(debateId).emit('debateUpdated', updatedDebate);
+    
             res.json(updatedDebate);
         } catch (error) {
             res.status(500).json({ message: "Error updating debate.", error: error.message });
         }
     },
-
-    // Delete a debate
+    
     deleteDebate: async (req, res) => {
+        const debateId = req.params.debateId;
+        console.log("Deleting debate with ID:", debateId);
+    
         try {
-            const debate = await Debate.findByPk(req.params.id);
-            if (debate) {
-                await debate.destroy();
-                // Emit an event for the deleted debate
-                req.app.get('io').to(req.params.id).emit('debateDeleted', { debateId: req.params.id });
-                res.json({ message: "Debate successfully deleted." });
-            } else {
-                res.status(404).json({ message: "Debate not found." });
+            const debate = await db.Debate.findByPk(debateId);
+            if (!debate) {
+                return res.status(404).send({ message: "Debate not found." });
             }
+    
+            await debate.destroy();
+    
+            // Emit an event for the deleted debate
+            req.app.get('io').to(debateId).emit('debateDeleted', { debateId });
+    
+            res.json({ message: "Debate successfully deleted." });
         } catch (error) {
             res.status(500).json({ message: "Error deleting debate.", error: error.message });
         }
     },
+    
+    // searchDebates: async (req, res) => {
+    //     const { keyword, status, startDate, endDate, category } = req.query;
+    //     try {
+    //         const conditions = {
+    //             [Op.and]: [
+    //                 keyword ? {
+    //                     [Op.or]: [
+    //                         { title: { [Op.iLike]: `%${keyword}%` } },
+    //                         { description: { [Op.iLike]: `%${keyword}%` } }
+    //                     ]
+    //                 } : {},
+    //                 status ? { status } : {},
+    //                 startDate && endDate ? {
+    //                     dateTime: {
+    //                         [Op.between]: [new Date(startDate), new Date(endDate)]
+    //                     }
+    //                 } : {},
+    //                 category ? { topicCategory: category } : {}
+    //             ]
+    //         };
 
-    // Search for debates
+    //         const debates = await db.Debate.findAll({
+    //             where: conditions,
+    //             order: [['dateTime', 'DESC']]
+    //         });
+
+    //         res.json(debates);
+    //     } catch (error) {
+    //         console.error('Search error:', error);
+    //         res.status(500).send('Failed to perform search.');
+    //     }
+    // },
+
     searchDebates: async (req, res) => {
         const { keyword, status, startDate, endDate, category } = req.query;
         try {
             const conditions = {
-                [Op.and]: [ // Combine all conditions
+                [Op.and]: [
+                    // Use Sequelize.fn for case-insensitive search
                     keyword ? {
                         [Op.or]: [
-                            { title: { [Op.iLike]: `%${keyword}%` } },
-                            { description: { [Op.iLike]: `%${keyword}%` } }
+                            Sequelize.where(
+                                Sequelize.fn('LOWER', Sequelize.col('title')),
+                                Sequelize.Op.like,
+                                '%' + keyword.toLowerCase() + '%'
+                            ),
+                            Sequelize.where(
+                                Sequelize.fn('LOWER', Sequelize.col('description')),
+                                Sequelize.Op.like,
+                                '%' + keyword.toLowerCase() + '%'
+                            )
                         ]
                     } : {},
                     status ? { status } : {},
@@ -93,25 +145,26 @@ const debateController = {
                     category ? { topicCategory: category } : {}
                 ]
             };
-
-            const debates = await Debate.findAll({
+    
+            const debates = await db.Debate.findAll({
                 where: conditions,
-                order: [['dateTime', 'DESC']] // Orders by dateTime in descending order
+                order: [['dateTime', 'DESC']]
             });
+    
             res.json(debates);
         } catch (error) {
             console.error('Search error:', error);
             res.status(500).send('Failed to perform search.');
         }
     },
-
-    // Retrieve archived debates
+    
     getArchivedDebates: async (req, res) => {
         try {
-            const archivedDebates = await Debate.findAll({
+            const archivedDebates = await db.Debate.findAll({
                 where: { status: 'Archived' },
-                order: [['dateTime', 'DESC']] // Adjust ordering as necessary
+                order: [['dateTime', 'DESC']]
             });
+
             res.json(archivedDebates);
         } catch (error) {
             console.error('Error retrieving archived debates:', error);
