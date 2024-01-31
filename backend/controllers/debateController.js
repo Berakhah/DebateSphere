@@ -1,15 +1,33 @@
-// controllers/debateController.js
-
 const { isFuture, parseISO } = require('date-fns');
 const { isContentAppropriate } = require('../utilities/contentFilter');
-const { validationResult } = require('express-validator');
-const { Sequelize, Op } = require('sequelize'); // Correctly import Sequelize and Op
-const db = require('../models'); // Importing the database models
 const { checkContentWithAI } = require('../utilities/aiContentFilter');
+const { validationResult } = require('express-validator');
+const { Sequelize, Op } = require('sequelize');
+const db = require('../models');
 
+// Standalone function for building the search query
+const buildSearchQuery = ({ keyword, status, startDate, endDate, category }) => {
+    const conditions = [];
+    
+    if (keyword) {
+        const lowerKeyword = '%' + keyword.toLowerCase() + '%';
+        conditions.push({
+            [Op.or]: [
+                Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('title')), Sequelize.Op.like, lowerKeyword),
+                Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('description')), Sequelize.Op.like, lowerKeyword)
+            ]
+        });
+    }
+    
+    if (status) conditions.push({ status });
+    if (startDate && endDate) conditions.push({ dateTime: { [Op.between]: [new Date(startDate), new Date(endDate)] } });
+    if (category) conditions.push({ topicCategory: category });
+    
+    return conditions;
+};
 
 const debateController = {
-    createDebate: async (req, res) => {
+    async createDebate(req, res) {
         console.log('Creating debate with data:', req.body);
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -32,128 +50,92 @@ const debateController = {
         }
 
         try {
-            console.log('Attempting to create debate...');
             const debate = await db.Debate.create({
                 ...req.body,
-                creatorUserId: req.user.id // Assuming 'req.user.id' is correctly populated from the JWT strategy
+                creatorUserId: req.user.id
             });
-            console.log('Debate created:', debate);
-
-            // Emit an event for the newly created debate
             req.app.get('io').emit('debateCreated', debate);
-
             res.status(201).json(debate);
         } catch (error) {
+            console.error("Error creating debate:", error);
             res.status(500).json({ message: "Error creating debate.", error: error.message });
         }
     },
 
-  updateDebate: async (req, res) => {
-    const debateId = req.params.debateId;
-    console.log("Updating debate with ID:", debateId);
+    async updateDebate(req, res) {
+        const debateId = req.params.debateId;
+        console.log("Updating debate with ID:", debateId);
 
-    try {
-        const debate = await db.Debate.findByPk(debateId);
-        if (!debate) {
-            return res.status(404).send({ message: "Debate not found." });
+        try {
+            const debate = await db.Debate.findByPk(debateId);
+            if (!debate) {
+                return res.status(404).json({ message: "Debate not found." });
+            }
+
+            if (!isContentAppropriate(req.body.description) || !(await checkContentWithAI(req.body.description))) {
+                return res.status(400).json({ message: "Content flagged as inappropriate." });
+            }
+
+            const updatedDebate = await debate.update(req.body);
+            req.app.get('io').to(debateId).emit('debateUpdated', updatedDebate);
+            res.json(updatedDebate);
+        } catch (error) {
+            console.error("Error updating debate:", error);
+            res.status(500).json({ message: "Error updating debate.", error: error.message });
         }
-
-        // Check if the content is appropriate
-        if (!isContentAppropriate(req.body.description)) {
-            return res.status(400).json({ message: "Content includes prohibited keywords." });
-        }
-
-        // Check content with AI moderation
-        const isDescriptionAppropriate = await checkContentWithAI(req.body.description);
-        if (!isDescriptionAppropriate) {
-            return res.status(400).json({ message: "Content flagged as inappropriate by AI filter." });
-        }
-
-        // Proceed with updating the debate
-        const updatedDebate = await debate.update(req.body);
-
-        // Emit an event for the updated debate
-        req.app.get('io').to(debateId).emit('debateUpdated', updatedDebate);
-
-        res.json(updatedDebate);
-    } catch (error) {
-        res.status(500).json({ message: "Error updating debate.", error: error.message });
-    }
-},
-
+    },
     
-    deleteDebate: async (req, res) => {
+    async deleteDebate(req, res) {
         const debateId = req.params.debateId;
         console.log("Deleting debate with ID:", debateId);
     
         try {
             const debate = await db.Debate.findByPk(debateId);
             if (!debate) {
-                return res.status(404).send({ message: "Debate not found." });
+                return res.status(404).json({ message: "Debate not found." });
             }
     
             await debate.destroy();
-    
-            // Emit an event for the deleted debate
             req.app.get('io').to(debateId).emit('debateDeleted', { debateId });
-    
             res.json({ message: "Debate successfully deleted." });
         } catch (error) {
+            console.error("Error deleting debate:", error);
             res.status(500).json({ message: "Error deleting debate.", error: error.message });
         }
     },
-
-    searchDebates: async (req, res) => {
-        const { keyword, status, startDate, endDate, category } = req.query;
+    
+    async searchDebates(req, res) {
+        const query = buildSearchQuery(req.query);
         try {
-            const conditions = {
-                [Op.and]: [
-                    keyword ? {
-                        [Op.or]: [
-                            Sequelize.where(
-                                Sequelize.fn('LOWER', Sequelize.col('title')),
-                                Sequelize.Op.like,
-                                '%' + keyword.toLowerCase() + '%'
-                            ),
-                            Sequelize.where(
-                                Sequelize.fn('LOWER', Sequelize.col('description')),
-                                Sequelize.Op.like,
-                                '%' + keyword.toLowerCase() + '%'
-                            )
-                        ]
-                    } : {},
-                    status ? { status } : {},
-                    startDate && endDate ? {
-                        dateTime: {
-                            [Op.between]: [new Date(startDate), new Date(endDate)]
-                        }
-                    } : {},
-                    category ? { topicCategory: category } : {}
-                ]
-            };
-
             const debates = await db.Debate.findAll({
-                where: conditions,
+                where: { [Op.and]: query },
                 order: [['dateTime', 'DESC']]
             });
-
             res.json(debates);
         } catch (error) {
-            console.error('Search error:', error);
+            console.error("Search error:", error);
             res.status(500).send('Failed to perform search.');
         }
     },
     
-    getArchivedDebates: async (req, res) => {
+    async getArchivedDebates(req, res) {
+        const { page = 1, limit = 10 } = req.query;
         try {
-            const archivedDebates = await db.Debate.findAll({
+            const offset = (page - 1) * limit;
+            const archivedDebates = await db.Debate.findAndCountAll({
                 where: { status: 'Archived' },
+                limit,
+                offset,
                 order: [['dateTime', 'DESC']]
             });
-
-            res.json(archivedDebates);
+    
+            res.json({
+                totalPages: Math.ceil(archivedDebates.count / limit),
+                currentPage: page,
+                debates: archivedDebates.rows
+            });
         } catch (error) {
-            console.error('Error retrieving archived debates:', error);
+            console.error("Error retrieving archived debates:", error);
             res.status(500).send('Failed to retrieve archived debates.');
         }
     }

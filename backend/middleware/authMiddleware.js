@@ -23,8 +23,6 @@ const authenticate = (req, res, next) => {
     
 };
 
-
-
 const checkRole = (roles) => {
     return (req, res, next) => {
         if (!roles.includes(req.user.role)) {

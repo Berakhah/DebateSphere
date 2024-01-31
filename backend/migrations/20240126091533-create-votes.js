@@ -13,7 +13,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'Debate', // Note: Sequelize pluralizes table names
+          model: 'Debate',
           key: 'debateId'
         },
         onUpdate: 'CASCADE',
@@ -23,7 +23,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'User', // Note: Sequelize pluralizes table names
+          model: 'User',
           key: 'userId'
         },
         onUpdate: 'NO ACTION',
