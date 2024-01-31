@@ -1,3 +1,5 @@
+//authMiddleware.js
+
 const jwt = require('jsonwebtoken');
 const db = require('../models');
 
@@ -21,23 +23,36 @@ const authenticate = (req, res, next) => {
     
 };
 
+
+
+const checkRole = (roles) => {
+    return (req, res, next) => {
+        if (!roles.includes(req.user.role)) {
+            return res.status(403).json({ message: 'Access denied.' });
+        }
+        next();
+    };
+};
+
 const checkDebateOwnership = async (req, res, next) => {
     const debateId = req.params.debateId;
-    console.log("Debate ID from request:", debateId);
 
     try {
         const debate = await db.Debate.findByPk(debateId);
         if (!debate) {
-            console.log("Debate not found for ID:", debateId);
             return res.status(404).send({ message: "Debate not found." });
         }
 
-        if (debate.creatorUserId !== req.user.id) {
-            console.log("User not authorized. User ID:", req.user.id, "Creator ID:", debate.creatorUserId);
-            return res.status(403).send({ message: "User is not authorized to perform this action." });
+        // Allow moderators or admins to bypass ownership check
+        if (['moderator', 'administrator'].includes(req.user.role)) {
+            return next();
         }
 
-        req.debate = debate;
+        // Check if the logged-in user is the debate creator
+        if (debate.creatorUserId !== req.user.id) {
+            return res.status(403).send({ message: "Unauthorized access." });
+        }
+
         next();
     } catch (error) {
         console.error("Error in checkDebateOwnership:", error);
@@ -45,5 +60,4 @@ const checkDebateOwnership = async (req, res, next) => {
     }
 };
 
-
-module.exports = { authenticate, checkDebateOwnership };
+module.exports = { authenticate, checkDebateOwnership, checkRole };

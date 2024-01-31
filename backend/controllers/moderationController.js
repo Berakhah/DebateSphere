@@ -1,3 +1,5 @@
+//moderationController.js
+
 const { Report } = require('../models');
 
 const moderationController = {

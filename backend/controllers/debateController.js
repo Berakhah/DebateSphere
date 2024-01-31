@@ -5,6 +5,8 @@ const { isContentAppropriate } = require('../utilities/contentFilter');
 const { validationResult } = require('express-validator');
 const { Sequelize, Op } = require('sequelize'); // Correctly import Sequelize and Op
 const db = require('../models'); // Importing the database models
+const { checkContentWithAI } = require('../utilities/aiContentFilter');
+
 
 const debateController = {
     createDebate: async (req, res) => {
@@ -16,6 +18,11 @@ const debateController = {
 
         if (!isContentAppropriate(req.body.description)) {
             return res.status(400).json({ message: "Content includes prohibited keywords." });
+        }
+        
+        const isDescriptionAppropriate = await checkContentWithAI(req.body.description);
+        if (!isDescriptionAppropriate) {
+            return res.status(400).json({ message: "Content flagged as inappropriate by AI filter." });
         }
 
         const { dateTime } = req.body;
@@ -41,26 +48,39 @@ const debateController = {
         }
     },
 
-    updateDebate: async (req, res) => {
-        const debateId = req.params.debateId;
-        console.log("Updating debate with ID:", debateId);
-    
-        try {
-            const debate = await db.Debate.findByPk(debateId);
-            if (!debate) {
-                return res.status(404).send({ message: "Debate not found." });
-            }
-    
-            const updatedDebate = await debate.update(req.body);
-    
-            // Emit an event for the updated debate
-            req.app.get('io').to(debateId).emit('debateUpdated', updatedDebate);
-    
-            res.json(updatedDebate);
-        } catch (error) {
-            res.status(500).json({ message: "Error updating debate.", error: error.message });
+  updateDebate: async (req, res) => {
+    const debateId = req.params.debateId;
+    console.log("Updating debate with ID:", debateId);
+
+    try {
+        const debate = await db.Debate.findByPk(debateId);
+        if (!debate) {
+            return res.status(404).send({ message: "Debate not found." });
         }
-    },
+
+        // Check if the content is appropriate
+        if (!isContentAppropriate(req.body.description)) {
+            return res.status(400).json({ message: "Content includes prohibited keywords." });
+        }
+
+        // Check content with AI moderation
+        const isDescriptionAppropriate = await checkContentWithAI(req.body.description);
+        if (!isDescriptionAppropriate) {
+            return res.status(400).json({ message: "Content flagged as inappropriate by AI filter." });
+        }
+
+        // Proceed with updating the debate
+        const updatedDebate = await debate.update(req.body);
+
+        // Emit an event for the updated debate
+        req.app.get('io').to(debateId).emit('debateUpdated', updatedDebate);
+
+        res.json(updatedDebate);
+    } catch (error) {
+        res.status(500).json({ message: "Error updating debate.", error: error.message });
+    }
+},
+
     
     deleteDebate: async (req, res) => {
         const debateId = req.params.debateId;

@@ -8,6 +8,7 @@ router.post('/debate', [
     authenticate,
     body('debateId').isInt().withMessage('Debate ID must be an integer'),
     body('reason').notEmpty().withMessage('Reason for reporting cannot be empty'),
+    body('issueType').isIn(['Harassment', 'Spam', 'Inappropriate Content', 'Other']).withMessage('Invalid issue type'),
     validateDebateReport
 ], createReport);
 

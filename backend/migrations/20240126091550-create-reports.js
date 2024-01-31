@@ -30,6 +30,10 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull: false
       },
+      issueType: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
       reviewed: {
         type: Sequelize.BOOLEAN,
         defaultValue: false

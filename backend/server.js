@@ -35,7 +35,7 @@ app.use('/api/auth/login', loginLimiter);
 app.use('/api/auth', authRoutes);
 app.use('/api/debates', debateRoutes);
 app.use('/api/votes', voteRoutes);
-app.use('/api/comments', commentRoutes);
+app.use('/api', commentRoutes);
 app.use('/api/moderation', moderationRoutes);
 
 app.get('/', (req, res) => res.send('Welcome to DebateSphere API!'));

@@ -1,15 +1,18 @@
+//reportController.js
+
 const { Report, Debate } = require('../models'); // Adjust the path as necessary
 const { validationResult } = require('express-validator');
 
 const createReport = async (req, res) => {
-    const { debateId, reason } = req.body;
+    const { debateId, reason, issueType } = req.body;
 
     try {
         await Report.create({
             type: 'debate',
             targetId: debateId,
-            reporterId: req.user.id, // Ensure your auth middleware sets req.user
-            reason
+            reporterId: req.user.id,
+            reason,
+            issueType // Include issueType here
         });
         return res.json({ message: 'Report submitted successfully.' });
     } catch (error) {

@@ -1,7 +1,6 @@
 const express = require('express');
 const { body, validationResult } = require('express-validator');
-const { authenticate, checkDebateOwnership } = require('../middleware/authMiddleware');
-const debateController = require('../controllers/debateController');
+const { authenticate, checkDebateOwnership, checkRole } = require('../middleware/authMiddleware');const debateController = require('../controllers/debateController');
 const router = express.Router();
 
 router.post('/create', [
@@ -9,7 +8,7 @@ router.post('/create', [
     body('description').not().isEmpty().withMessage('Description is required'),
     body('dateTime').not().isEmpty().withMessage('Date and time are required'),
     body('topicCategory').not().isEmpty().withMessage('Topic category is required'),
-], authenticate, debateController.createDebate);
+], authenticate, checkRole(['admin', 'moderator', 'debate_creator']), debateController.createDebate);
 
 router.put('/update/:debateId', authenticate, checkDebateOwnership, debateController.updateDebate);
 

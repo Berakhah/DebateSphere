@@ -9,7 +9,8 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false,
             validate: {
-                isIn: [['Debate', 'Comment']]},
+                isIn: [['Debate', 'Comment']]
+            },
         },
         targetId: {
             type: DataTypes.INTEGER,
@@ -22,6 +23,13 @@ module.exports = (sequelize, DataTypes) => {
         reason: {
             type: DataTypes.TEXT,
             allowNull: false
+        },
+        issueType: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate: {
+                isIn: [['Harassment', 'Spam', 'Inappropriate Content', 'Other']]
+            }
         },
         reviewed: {
             type: DataTypes.BOOLEAN,
