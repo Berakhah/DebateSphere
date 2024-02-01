@@ -1,0 +1,15 @@
+.debate-detail-container {
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+    background-color: #f9f9f9; /* Light background for the detail area */
+    border-radius: 8px; /* Rounded corners for the container */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  }
+  
+  .debate-detail-container h2 {
+    margin-bottom: 20px;
+  }
+  
+  /* Add more styles as needed */
+  

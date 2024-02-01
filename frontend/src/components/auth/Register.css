@@ -1,0 +1,41 @@
+/* Basic styles for the registration form, similar to Login.css */
+.register-container {
+    max-width: 400px;
+    margin: auto;
+    padding: 20px;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  .form-group input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 5px;
+  }
+  
+  .form-group .error {
+    color: red;
+    font-size: 0.8rem;
+  }
+  
+  button {
+    padding: 10px 15px;
+    width: 100%;
+  }
+
+  .error-input {
+    border: 1px solid red;
+  }
+  
+  /* Styles for the loading state */
+  button:disabled {
+    background-color: #ccc;
+  }
+  

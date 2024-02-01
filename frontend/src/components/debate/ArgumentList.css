@@ -1,0 +1,31 @@
+.argument-list-container {
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+  }
+  
+  .argument-list-container h2 {
+    margin-bottom: 20px;
+  }
+  
+  ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .argument-item {
+    background-color: #f9f9f9;
+    margin-bottom: 10px;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .vote-section {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+  
+  /* Add more styles as needed */
+  

@@ -1,0 +1,50 @@
+.edit-debate-container {
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+    background-color: #f9f9f9; /* Light background for the form area */
+    border-radius: 8px; /* Rounded corners for the form container */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold; /* Make labels bold */
+  }
+  
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 5px;
+    border: 1px solid #ccc; /* Consistent border for all input types */
+    border-radius: 4px; /* Slightly rounded edges for inputs */
+  }
+  
+  .form-group textarea {
+    height: 150px; /* Larger height for textarea */
+  }
+  
+  button {
+    padding: 10px 15px;
+    width: 100%;
+    background-color: #007bff; /* Example primary color */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #0056b3; /* Darker shade for hover state */
+  }
+  
+  /* Specific styles for edit functionality, if needed */
+  /* ... */
+  
