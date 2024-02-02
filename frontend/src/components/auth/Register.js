@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
-import './Register.css'; // Make sure to create a Register.css file for styling
+import './Register.css'; // Ensure you have corresponding CSS for styling
+import { registerUser } from '../../api/api';
+import {useNavigate} from 'react-router-dom';
+
 
 const Register = () => {
   const [user, setUser] = useState({
     name: '',
     email: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    role: ''
   });
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -16,12 +20,15 @@ const Register = () => {
     setUser({ ...user, [name]: value });
   };
 
+  const navigate = useNavigate()
+
   const validateForm = () => {
     let tempErrors = {};
     tempErrors.name = user.name ? "" : "Name is required.";
     tempErrors.email = /[^@]+@[^\.]+\..+/.test(user.email) ? "" : "Please enter a valid email address.";
     tempErrors.password = user.password.length > 5 ? "" : "Password must be at least 6 characters long.";
     tempErrors.confirmPassword = user.password === user.confirmPassword ? "" : "Passwords do not match.";
+    tempErrors.role = user.role ? "" : "Role is required";
     setErrors({ ...tempErrors });
     return Object.values(tempErrors).every(x => x === "");
   };
@@ -30,11 +37,17 @@ const Register = () => {
     event.preventDefault();
     if (validateForm()) {
       setIsSubmitting(true);
-      console.log("Registration form is valid!");
+      // Here you would typically send a request to your backend to register the user
+      // user.name = "TestUser";
+      // user.role = "admin";
+      console.log("Registration form is valid and being submitted", user);
       // Simulate an API call
+    registerUser(user);
+      console.log("registered");
+      navigate('/login')
       setTimeout(() => {
         setIsSubmitting(false);
-        // Here you would handle the registration logic
+        // Handle post-registration logic here, like redirecting to a login page or showing a success message
       }, 2000);
     } else {
       console.log("Registration form is invalid!");
@@ -56,7 +69,55 @@ const Register = () => {
           />
           {errors.name && <p className="error">{errors.name}</p>}
         </div>
-        {/* Repeat the structure for email, password, and confirmPassword fields */}
+        <div className="form-group">
+          <label htmlFor="email">Email</label>
+          <input 
+            type="email" 
+            id="email" 
+            name="email"
+            value={user.email} 
+            onChange={handleInputChange} 
+            className={errors.email ? "error-input" : ""}
+          />
+          {errors.email && <p className="error">{errors.email}</p>}
+        </div>
+        <div className="form-group">
+          <label htmlFor="password">Password</label>
+          <input 
+            type="password" 
+            id="password" 
+            name="password"
+            value={user.password} 
+            onChange={handleInputChange} 
+            className={errors.password ? "error-input" : ""}
+          />
+          {errors.password && <p className="error">{errors.password}</p>}
+        </div>
+        <div className="form-group">
+          <label htmlFor="confirmPassword">Confirm Password</label>
+          <input 
+            type="password" 
+            id="confirmPassword" 
+            name="confirmPassword"
+            value={user.confirmPassword} 
+            onChange={handleInputChange} 
+            className={errors.confirmPassword ? "error-input" : ""}
+          />
+          {errors.confirmPassword && <p className="error">{errors.confirmPassword}</p>}
+        </div>
+        
+        <div className="form-group">
+          <label htmlFor="role">role</label>
+          <input 
+            type="text" 
+            id="role" 
+            name="role"
+            value={user.role} 
+            onChange={handleInputChange} 
+            className={errors.role ? "error-input" : ""}
+          />
+          {errors.role && <p className="error">{errors.role}</p>}
+        </div>
         <button type="submit" disabled={isSubmitting}>
           {isSubmitting ? 'Registering...' : 'Register'}
         </button>

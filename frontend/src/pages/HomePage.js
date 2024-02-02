@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
-import { fetchDebates } from '..utils/api'; // Adjust the import path as needed
+import { fetchDebates } from '../utils/api'; // Adjust the import path as needed
 import './HomePage.css'; // Your CSS file for styling
 
 const HomePage = () => {

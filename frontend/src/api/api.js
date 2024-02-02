@@ -3,13 +3,16 @@ const API_BASE_URL = 'http://localhost:3000';
 // Register User
 export const registerUser = async (userData) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/auth/register`, {
+    const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(userData)
     });
+    if(response.ok){
+      console.log("registered successfully!")
+    }
     return await response.json();
   } catch (error) {
     console.error('Registration error:', error);
@@ -19,14 +22,21 @@ export const registerUser = async (userData) => {
 // Login User
 export const loginUser = async (credentials) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/auth/login`, {
+    const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(credentials)
+      body: credentials
     });
-    return await response.json();
+    const data = await response.json();
+    localStorage.setItem('id',data.id)
+    localStorage.setItem('role',data.role)
+    localStorage.setItem('token',data.accessToken)
+
+    console.log(data,"response body")
+
+    return data;
   } catch (error) {
     console.error('Login error:', error);
   }

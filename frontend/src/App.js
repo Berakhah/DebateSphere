@@ -36,17 +36,17 @@ function App() {
     <Router>
       <Navbar />
       <ErrorBoundary>
-        <LoadingSpinner /> {/* Conditionally rendered */}
+        {/* <LoadingSpinner /> Conditionally rendered */}
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
+          {/* <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/dashboard" element={<PrivateRoute><DashboardPage /></PrivateRoute>} />
           <Route path="/debate/:id" element={<PrivateRoute><DebatePage /></PrivateRoute>} />
           <Route path="/moderation" element={<PrivateRoute><ModerationPage /></PrivateRoute>} />
           <Route path="/archive" element={<PrivateRoute><ArchivePage /></PrivateRoute>} />
-          <Route path="/contact" element={<PrivateRoute><ContactPage /></PrivateRoute>} />
+          <Route path="/contact" element={<PrivateRoute><ContactPage /></PrivateRoute>} /> */}
           {/* Add more routes as needed */}
         </Routes>
       </ErrorBoundary>
