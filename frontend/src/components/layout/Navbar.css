@@ -11,12 +11,13 @@ nav {
     background-color: var(--bg-color);
     height: 50px;
     display: flex;
-    justify-content: start;
+    justify-content: flex-start; /* Updated from start to flex-start */
     align-items: center;
     border: 1px solid var(--border-color);
     border-radius: 5px;
     box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.5);
 }
+
 
 nav ul {
     list-style: none;

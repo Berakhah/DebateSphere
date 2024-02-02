@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios'; // Make sure to install axios for making HTTP requests
 import './EditDebate.css'; // Make sure to create an EditDebate.css file for styling
 
 const EditDebate = ({ match }) => {
@@ -14,18 +15,42 @@ const EditDebate = ({ match }) => {
   const debateId = match.params.id; // Assuming you're using React Router and getting the debate ID from the URL
 
   useEffect(() => {
-    // Fetch the debate details from the API and populate the state
-    // Example: fetchDebateDetails(debateId).then(data => setDebateDetails(data));
+    const fetchDebateDetails = async () => {
+      try {
+        const response = await axios.get(`http://localhost:3000/api/debates/${debateId}`, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}` // Retrieve the token from local storage
+          }
+        });
+        setDebateDetails(response.data);
+      } catch (err) {
+        console.error("Error fetching debate details:", err);
+        // Handle errors appropriately
+      }
+    };
+
+    fetchDebateDetails();
   }, [debateId]);
 
-  // Reuse the validation and input handling logic from CreateDebate.js
-  // ...
+  const validateForm = () => {
+    // Validation logic here...
+  };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     if (validateForm()) {
-      console.log("Debate form is valid!");
-      // Handle debate update logic...
+      try {
+        const response = await axios.post(`http://localhost:3000/api/debates/update/${debateId}`, debateDetails, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        console.log("Debate updated successfully:", response.data);
+        // Handle success (e.g., redirect to the debate details page or show a success message)
+      } catch (error) {
+        console.error("Error updating debate:", error);
+        setErrors({ api: error.response.data.message || "An error occurred. Please try again later." });
+      }
     } else {
       console.log("Debate form is invalid!");
     }
@@ -36,6 +61,7 @@ const EditDebate = ({ match }) => {
       <form onSubmit={handleSubmit} noValidate>
         {/* Reuse input fields from CreateDebate.js */}
         {/* Submit Button */}
+        {errors.api && <p className="error">{errors.api}</p>}
       </form>
     </section>
   );

@@ -14,7 +14,7 @@ const ArgumentList = ({ debateId }) => {
     <section className="argument-list-container">
       <h2>Arguments</h2>
       <ul>
-        {arguments.map((argument, index) => (
+        {argumentList.map((argument, index) => (
           <li key={index} className="argument-item">
             <p>{argument.text}</p>
             <div className="vote-section">

@@ -1,12 +1,27 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios'; // Make sure to install axios for making HTTP requests
+import { Link } from 'react-router-dom';
 import './DebateList.css'; // Make sure to create a DebateList.css file for styling
 
 const DebateList = () => {
   const [debates, setDebates] = useState([]);
 
   useEffect(() => {
-    // Fetch the list of debates from the API and set the debates state
-    // Example: fetchDebates().then(data => setDebates(data));
+    const fetchDebates = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/api/debates/search', {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}` // Retrieve the token from local storage
+          }
+        });
+        setDebates(response.data);
+      } catch (err) {
+        console.error("Error fetching debates:", err);
+        // Handle errors appropriately
+      }
+    };
+
+    fetchDebates();
   }, []);
 
   return (
@@ -18,7 +33,7 @@ const DebateList = () => {
             <h3>{debate.title}</h3>
             <p>{debate.description}</p>
             <p>Scheduled for: {debate.date} at {debate.time}</p>
-            {/* Add a link or button to navigate to the DebateDetail component */}
+            <Link to={`/debate/${debate.id}`}>View Details</Link>
           </li>
         ))}
       </ul>

@@ -1,0 +1,29 @@
+/* HomePage Specific Styles */
+.home-banner {
+    background: linear-gradient(to right, #0062E6, #33AEFF);
+    color: white;
+    padding: 40px 20px;
+    text-align: center;
+  }
+  
+  .feature-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+    padding: 20px;
+  }
+  
+  .feature-card {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .feature-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  /* ... Additional HomePage styles ... */
+  
