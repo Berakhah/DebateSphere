@@ -8,11 +8,12 @@ module.exports = {
     "host": process.env.DB_HOST,
     "port": process.env.DB_PORT,
     "dialect": "mssql",
+    "logging": console.log,
     "dialectOptions": {
       "options": {
         "encrypt": true, // Set to true if using Azure SQL or similar
         "enableArithAbort": true
-      }
+      },
     }
   },
   "test": {

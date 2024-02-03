@@ -1,13 +1,17 @@
 import React from 'react';
 import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
-import './ModerationPage.css'; // Make sure to create a ModerationPage.css file for styling
+import ModerationPanel from '../components/moderation/ModerationPanel'; 
+import './ModerationPage.css';
 
 const ModerationPage = () => {
   return (
     <div>
       <Navbar />
-      {/* Content of the moderation page */}
+      <main className="moderation-page-content">
+        <h1>Moderation Dashboard</h1>
+        <ModerationPanel />
+      </main>
       <Footer />
     </div>
   );

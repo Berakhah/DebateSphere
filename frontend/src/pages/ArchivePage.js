@@ -1,13 +1,17 @@
 import React from 'react';
 import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
-import './ArchivePage.css'; // Make sure to create an ArchivePage.css file for styling
+import ArchiveList from '../components/search/ArchiveList'; // Adjust the import path as needed
+import './ArchivePage.css';
 
 const ArchivePage = () => {
   return (
     <div>
       <Navbar />
-      {/* Content of the archive page */}
+      <main className="archive-page-content">
+        <h1>Archived Debates</h1>
+        <ArchiveList />
+      </main>
       <Footer />
     </div>
   );

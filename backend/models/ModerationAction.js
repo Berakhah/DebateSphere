@@ -1,8 +1,8 @@
 const { Model, DataTypes } = require('sequelize');
 
-class ModerationAction extends Model {}
-
 module.exports = (sequelize) => {
+    class ModerationAction extends Model {}
+
     ModerationAction.init({
         actionId: {
             type: DataTypes.INTEGER,
@@ -13,23 +13,29 @@ module.exports = (sequelize) => {
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
-                model: 'User', // This should match the model name
+                model: 'User',
                 key: 'userId'
-            }
+            },
+            onDelete: 'NO ACTION',
+            onUpdate: 'NO ACTION'
         },
         targetUserId: {
             type: DataTypes.INTEGER,
             references: {
-                model: 'User', // This should match the model name
+                model: 'User',
                 key: 'userId'
-            }
+            },
+            onDelete: 'SET NULL', // Adjust according to your business logic
+            onUpdate: 'NO ACTION'
         },
         targetDebateId: {
             type: DataTypes.INTEGER,
             references: {
-                model: 'Debate', // This should match the model name
+                model: 'Debate',
                 key: 'debateId'
-            }
+            },
+            onDelete: 'SET NULL', // Adjust according to your business logic
+            onUpdate: 'NO ACTION'
         },
         actionType: {
             type: DataTypes.STRING(50),
@@ -42,7 +48,7 @@ module.exports = (sequelize) => {
     }, {
         sequelize,
         modelName: 'ModerationAction',
-        tableName: 'ModerationAction' // Ensure this matches your actual SQL table name
+        tableName: 'ModerationAction'
     });
 
     return ModerationAction;

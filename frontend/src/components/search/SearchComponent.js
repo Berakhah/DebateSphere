@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import axios from 'axios'; // Make sure to install axios for making HTTP requests
-import './SearchComponent.css'; // Ensure you have corresponding CSS for styling
+import { searchDebates } from '../../api/api'; 
+import './SearchComponent.css';
 
 const SearchComponent = () => {
   const [searchParams, setSearchParams] = useState({
@@ -14,37 +14,65 @@ const SearchComponent = () => {
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    setSearchParams({ ...searchParams, [name]: value });
+    setSearchParams(prevParams => ({ ...prevParams, [name]: value }));
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setIsSearching(true);
+    setError(null);
     try {
-      const response = await axios.get('http://localhost:3000/api/debates/search', {
-        params: searchParams,
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}` // Retrieve the token from local storage
-        }
-      });
-      setSearchResults(response.data);
-      setError(null);
+      const data = await searchDebates(searchParams);
+      setSearchResults(data);
     } catch (err) {
       console.error("Error during search:", err);
-      setError(err.response?.data?.message || "An error occurred during the search.");
+      setError('Failed to perform search. Please try again.');
+    } finally {
+      setIsSearching(false);
     }
-    setIsSearching(false);
   };
 
   return (
     <section className="search-component-container">
+      <h2>Search Debates</h2>
       <form onSubmit={handleSubmit} noValidate>
-        {/* Input fields for keyword, category, date */}
-        {/* Submit Button */}
-        {isSearching && <p>Searching...</p>}
-        {error && <p className="error">{error}</p>}
-        {/* Render searchResults here */}
+        <input
+          type="text"
+          name="keyword"
+          placeholder="Keyword"
+          value={searchParams.keyword}
+          onChange={handleInputChange}
+        />
+        <input
+          type="text"
+          name="category"
+          placeholder="Category"
+          value={searchParams.category}
+          onChange={handleInputChange}
+        />
+        <input
+          type="date"
+          name="date"
+          placeholder="Date"
+          value={searchParams.date}
+          onChange={handleInputChange}
+        />
+        <button type="submit" disabled={isSearching}>Search</button>
       </form>
+      {isSearching ? <p>Searching...</p> : error ? <p className="error">{error}</p> : (
+        <ul>
+          {searchResults.length > 0 ? (
+            searchResults.map((debate) => (
+              <li key={debate.id}>
+                <h3>{debate.title}</h3>
+                <p>Date and Time: {debate.dateTime}</p>
+                <p>Status: {debate.status}</p>
+                <p>Category: {debate.topicCategory}</p>
+              </li>
+            ))
+          ) : <p>No results found.</p>}
+        </ul>
+      )}
     </section>
   );
 };

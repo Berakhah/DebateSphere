@@ -26,14 +26,15 @@ const Login = () => {
     event.preventDefault();
     if (validateForm()) {
       setIsLoading(true);
-      console.log("Form is valid!");
-      // Simulate an API call
-      loginUser({"email" : email, "password" : password})
-      navigate('/HomePage')
-      setTimeout(() => {
-        setIsLoading(false);
-        // Here you would handle the login logic
-      }, 2000);
+      try {
+        const data = await loginUser({ email, password });
+        console.log("Login successful!", data);
+        navigate('/HomePage'); // Use the correct path, considering case sensitivity and routing setup
+      } catch (error) {
+        console.error("Login failed:", error);
+        setErrors(prevErrors => ({ ...prevErrors, api: error.message || 'Login failed' }));
+      }
+      setIsLoading(false);
     } else {
       console.log("Form is invalid!");
     }

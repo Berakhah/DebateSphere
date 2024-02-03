@@ -1,44 +1,44 @@
 'use strict';
+
 module.exports = {
-  up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('Argument', {
+  up: async (queryInterface, DataTypes) => {
+    await queryInterface.createTable('Argument', {
       argumentId: {
-        allowNull: false,
-        autoIncrement: true,
+        type: DataTypes.INTEGER,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        autoIncrement: true,
+        allowNull: false
       },
       debateId: {
-        type: Sequelize.INTEGER,
+        type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: 'Debate',
           key: 'debateId'
         },
-        onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
       authorUserId: {
-        type: Sequelize.INTEGER,
+        type: DataTypes.INTEGER,
         references: {
           model: 'User',
           key: 'userId'
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'SET NULL'
+        onDelete: 'NO ACTION'
       },
       content: {
-        allowNull: false,
-        type: Sequelize.TEXT
+        type: DataTypes.TEXT,
+        allowNull: false
       },
       timestamp: {
+        type: DataTypes.DATE,
         allowNull: false,
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+        defaultValue: DataTypes.NOW
       }
     });
   },
-  down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('Argument');
+
+  down: async (queryInterface, Sequelize) => {
+    await queryInterface.dropTable('Argument');
   }
 };

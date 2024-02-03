@@ -33,22 +33,28 @@ const Register = () => {
     return Object.values(tempErrors).every(x => x === "");
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     if (validateForm()) {
       setIsSubmitting(true);
-      // Here you would typically send a request to your backend to register the user
-      // user.name = "TestUser";
-      // user.role = "admin";
-      console.log("Registration form is valid and being submitted", user);
-      // Simulate an API call
-    registerUser(user);
-      console.log("registered");
-      navigate('/login')
-      setTimeout(() => {
-        setIsSubmitting(false);
-        // Handle post-registration logic here, like redirecting to a login page or showing a success message
-      }, 2000);
+      try {
+        const result = await registerUser(user);
+        if (result.success) {
+          console.log("Registration successful", result.data);
+          // Redirect user to login page or show success message
+          navigate('/login');
+        } else {
+          // Handle registration errors, e.g., user already exists
+          console.error("Registration failed:", result.message);
+          // Set error state here to display message to the user
+          setErrors(prevErrors => ({ ...prevErrors, api: result.message }));
+        }
+      } catch (error) {
+        console.error("Registration exception:", error.message);
+        // Handle unexpected errors, e.g., network issues, server down
+        setErrors(prevErrors => ({ ...prevErrors, api: error.message }));
+      }
+      setIsSubmitting(false);
     } else {
       console.log("Registration form is invalid!");
     }
