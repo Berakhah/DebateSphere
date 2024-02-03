@@ -1,31 +1,58 @@
 import React, { useState, useEffect } from 'react';
-import VoteComponent from './VoteComponent'; // Ensure you've created the VoteComponent
-import './ArgumentList.css'; // Ensure you have corresponding CSS for styling
+import VoteComponent from './VoteComponent';
+import { listArgumentsForDebate } from '../../api/api'; 
+import './ArgumentList.css'; 
+
+
+const ArgumentItem = ({ argument }) => (
+    <li className="argument-item">
+        <p>{argument.content}</p>
+        <div className="vote-section">
+            <VoteComponent argumentId={argument.argumentId} />
+        </div>
+    </li>
+);
 
 const ArgumentList = ({ debateId }) => {
     const [argumentList, setArgumentList] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState(null);
 
-  useEffect(() => {
-    // Fetch the list of arguments for the specific debate from the API and set the arguments state
-    // Example: fetchArguments(debateId).then(data => setArguments(data));
-  }, [debateId]);
+    useEffect(() => {
+        const fetchArguments = async () => {
+            setIsLoading(true);
+            setError(null);
+            try {
+                const _arguments = await listArgumentsForDebate(debateId);
+                setArgumentList(_arguments);
+            } catch (error) {
+                setError('Failed to load arguments.');
+                console.error('Error fetching arguments:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
 
-  return (
-    <section className="argument-list-container">
-      <h2>Arguments</h2>
-      <ul>
-        {argumentList.map((argument, index) => (
-          <li key={index} className="argument-item">
-            <p>{argument.text}</p>
-            <div className="vote-section">
-              <VoteComponent argumentId={argument.id} />
-              {/* You can add a comment section or other functionalities as needed */}
-            </div>
-          </li>
-        ))}
-      </ul>
-    </section>
-  );
+        fetchArguments();
+    }, [debateId]);
+
+    if (isLoading) return <div>Loading arguments...</div>;
+    if (error) return <div>{error}</div>;
+
+    return (
+        <section className="argument-list-container">
+            <h2>Arguments</h2>
+            {argumentList.length > 0 ? (
+                <ul>
+                    {argumentList.map((argument) => (
+                        <ArgumentItem key={argument.argumentId} argument={argument} />
+                    ))}
+                </ul>
+            ) : (
+                <p>No arguments have been submitted yet.</p>
+            )}
+        </section>
+    );
 };
 
 export default ArgumentList;

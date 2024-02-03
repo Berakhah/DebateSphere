@@ -40,7 +40,18 @@ const validateDebateReport = async (req, res, next) => {
     }
 };
 
+const fetchAllReports = async (req, res) => {
+    try {
+        const reports = await Report.findAll();
+        return res.json(reports);
+    } catch (error) {
+        console.error('Error fetching reports:', error);
+        return res.status(500).json({ message: 'Error fetching reports.' });
+    }
+};
+
 module.exports = {
     createReport,
-    validateDebateReport
+    validateDebateReport,
+    fetchAllReports
 };

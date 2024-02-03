@@ -7,8 +7,10 @@ exports.validateDebateCreation = [
 ];
 
 exports.validateArgumentSubmission = [
-    check('content').isLength({ max: 500 }).withMessage('Argument must not exceed 500 characters'),
-    // Additional validation as required
+    check('content')
+        .isLength({ max: 500 }).withMessage('Argument must not exceed 500 characters')
+        .custom(isContentAppropriate).withMessage('Content includes prohibited keywords'),
+   
 ];
 
 exports.validateReportSubmission = [

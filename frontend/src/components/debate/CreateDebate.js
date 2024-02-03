@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import './CreateDebate.css'; // CSS for styling the CreateDebate component
-import { createDebate } from '../../api/api'; // API utility function to create a debate
-import { useNavigate } from 'react-router-dom'; // Hook for programmatically navigating
+import './CreateDebate.css'; 
+import { createDebate } from '../../api/api'; 
+import { useNavigate } from 'react-router-dom';
 
 const CreateDebate = () => {
   // State for storing debate details entered by the user

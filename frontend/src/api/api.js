@@ -242,22 +242,24 @@ export const postComment = async (debateId, commentData) => {
   };
 
 // Fetch Reports
-  export const fetchReports = async () => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/api/moderation/reports`, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
-      if (!response.ok) {
-        throw new Error('Failed to fetch reports');
+export const fetchReports = async () => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/reports`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
       }
-      return await response.json();
-    } catch (error) {
-      console.error('Fetching reports error:', error);
-      throw error;
+    });
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
     }
-  };
+    return await response.json();
+  } catch (error) {
+    console.error('Fetching reports error:', error);
+    throw error;
+  }
+};
+
   
   // Delete Content
 export const deleteContent = async (contentId) => {
@@ -327,4 +329,49 @@ export const reportContent = async (reportData) => {
     throw error;
   }
 };
+  
+// Post an Argument
+export const postArgument = async (debateId, argumentData) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/debate/${debateId}/argument`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+      },
+      body: JSON.stringify(argumentData),
+    });
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Posting argument error:', error);
+    throw error; // Propagate the error for handling it in UI
+  }
+};
+
+// List Arguments for a Debate
+export const listArgumentsForDebate = async (debateId) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/debate/${debateId}/arguments`, {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Listing arguments for debate error:', error);
+    throw error; // Propagate the error for handling it in UI
+  }
+};
+
+
   
