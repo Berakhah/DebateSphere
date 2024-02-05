@@ -4,6 +4,9 @@ const { checkContentWithAI } = require('../utilities/aiContentFilter');
 const { validationResult } = require('express-validator');
 const { Sequelize, Op } = require('sequelize');
 const db = require('../models');
+const moment = require('moment');
+const { isValid } = require('date-fns'); // Ensure you've imported isValid
+
 
 // Standalone function for building the search query
 const buildSearchQuery = ({ keyword, status, startDate, endDate, category }) => {
@@ -45,8 +48,13 @@ const debateController = {
 
         const { dateTime } = req.body;
         const parsedDateTime = parseISO(dateTime);
-        if (!isFuture(parsedDateTime)) {
-            return res.status(400).json({ message: "The debate must be scheduled for a future date and time." });
+        
+        // if (!isFuture(parsedDateTime)) {
+        //     return res.status(400).json({ message: "The debate must be scheduled for a future date and time." });
+        // }
+
+        if (!isValid(parsedDateTime) || !isFuture(parsedDateTime)) {
+             return res.status(400).json({ message: "The debate must be scheduled for a future date and time with a valid format." });
         }
 
         try {

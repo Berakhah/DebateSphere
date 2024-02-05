@@ -7,28 +7,18 @@ module.exports = {
     "database": process.env.DB_NAME,
     "host": process.env.DB_HOST,
     "port": process.env.DB_PORT,
-    "dialect": "mssql",
-    "logging": console.log,
-    "dialectOptions": {
-      "options": {
-        "encrypt": true, // Set to true if using Azure SQL or similar
-        "enableArithAbort": true
-      },
-    }
-  },
+    "dialect": "mariadb", // Ensure dialect is 'postgres'
+    "logging": console.log
+    },
+    
   "test": {
     "username": process.env.DB_USER,
     "password": process.env.DB_PASS,
     "database": process.env.DB_NAME,
     "host": process.env.DB_HOST,
     "port": process.env.DB_PORT,
-    "dialect": "mssql",
-    "dialectOptions": {
-      "options": {
-        "encrypt": true, // Set to true if using Azure SQL or similar
-        "enableArithAbort": true
-      }
-    }
+    "dialect": "mariadb", // Ensure dialect is 'postgres'
+    "logging": console.log,
   },
   "production": {
     "username": process.env.DB_USER,
@@ -36,12 +26,7 @@ module.exports = {
     "database": process.env.DB_NAME,
     "host": process.env.DB_HOST,
     "port": process.env.DB_PORT,
-    "dialect": "mssql",
-    "dialectOptions": {
-      "options": {
-        "encrypt": true, // Set to true if using Azure SQL or similar
-        "enableArithAbort": true
-      }
-    }
+    "dialect": "mariadb", // Ensure dialect is 'postgres'
+    "logging": console.log,
   }
 };

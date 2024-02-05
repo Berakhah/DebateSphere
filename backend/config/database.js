@@ -1,11 +1,13 @@
 const Sequelize = require('sequelize');
+require('dotenv').config(); 
+
 const config = require('./config.js')[process.env.NODE_ENV || 'development'];
 
-// Sequelize connection
+
 const sequelize = new Sequelize(config.database, config.username, config.password, {
     host: config.host,
     port: config.port,
-    dialect: 'mssql',
+    dialect: 'mariadb', 
     dialectOptions: config.dialectOptions,
     pool: {
         max: 10,
@@ -14,14 +16,14 @@ const sequelize = new Sequelize(config.database, config.username, config.passwor
     },
 });
 
-// Test the connection
+
 sequelize
     .authenticate()
     .then(() => {
-        console.log('Connection has been established successfully.');
+        console.log('Connection to MariaD has been established successfully.');
     })
     .catch(err => {
-        console.error('Unable to connect to the database:', err);
+        console.error('Unable to connect to the MariaDB database:', err);
     });
 
 module.exports = sequelize;

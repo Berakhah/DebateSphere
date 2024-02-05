@@ -32,6 +32,8 @@ const authRoutes = require('./routes/authRoutes');
 const voteRoutes = require('./routes/voteRoutes');
 const commentRoutes = require('./routes/commentRoutes');
 const moderationRoutes = require('./routes/moderationRoutes');
+const argumentRoutes = require('./routes/argumentsRoutes'); 
+
 
 const loginLimiter = rateLimit({
     windowMs: 15 * 60 * 1000,
@@ -45,6 +47,7 @@ app.use('/api/debates', debateRoutes);
 app.use('/api/votes', voteRoutes);
 app.use('/api', commentRoutes);
 app.use('/api/moderation', moderationRoutes);
+app.use('/api', argumentRoutes);
 
 app.get('/', (req, res) => res.send('Welcome to DebateSphere API!'));
 

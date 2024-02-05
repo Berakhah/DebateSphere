@@ -1,4 +1,5 @@
 const { check, validationResult } = require('express-validator');
+const { isContentAppropriate } = require('../utilities/contentFilter');
 
 exports.validateDebateCreation = [
     check('title').not().isEmpty().withMessage('Title is required'),
