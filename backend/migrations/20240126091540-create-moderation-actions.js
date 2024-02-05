@@ -1,7 +1,8 @@
 'use strict';
+
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('ModerationActions', {
+    await queryInterface.createTable('ModerationAction', {
       actionId: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
@@ -11,42 +12,49 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'User',
-          key: 'userId'
-        }
+          model: 'User', 
+          key: 'userId',
+        },
       },
       targetUserId: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'User',
-          key: 'userId'
+          model: 'User', 
+          key: 'userId',
         },
-        onDelete: 'SET NULL'
       },
-      targetContentId: {
+      targetDebateId: {
         type: Sequelize.INTEGER,
-        allowNull: true
-      },
-      contentType: {
-        type: Sequelize.STRING,
-        allowNull: true
+        references: {
+          model: 'Debate',
+          key: 'debateId',
+        },
       },
       actionType: {
         type: Sequelize.STRING(50),
-        allowNull: false
+        allowNull: false,
       },
       description: {
         type: Sequelize.TEXT,
-        allowNull: true
       },
       timestamp: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
-      }
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+      },
+      createdAt: {
+        allowNull: false,
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+      },
+      updatedAt: {
+        allowNull: false,
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'),
+      },
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('ModerationActions');
-  }
+    await queryInterface.dropTable('ModerationAction');
+  },
 };
