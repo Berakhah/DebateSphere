@@ -4,7 +4,7 @@ const { isContentAppropriate } = require('../utilities/contentFilter');
 exports.validateDebateCreation = [
     check('title').not().isEmpty().withMessage('Title is required'),
     check('description').not().isEmpty().withMessage('Description is required'),
-    // Additional validation as required
+
 ];
 
 exports.validateArgumentSubmission = [
@@ -16,7 +16,7 @@ exports.validateArgumentSubmission = [
 
 exports.validateReportSubmission = [
     check('reason').not().isEmpty().withMessage('Reason is required'),
-    // Additional validation as required
+
 ];
 
 exports.validateResult = (req, res, next) => {

@@ -1,17 +1,40 @@
 const express = require('express');
-const router = express.Router();
 const { body } = require('express-validator');
-const authenticate = require('../middleware/authenticate'); // Adjust the path as necessary
-const { createReport, validateDebateReport, fetchAllReports } = require('../controllers/reportController'); // Adjust the path as necessary
+const authenticate = require('../middleware/authMiddleware'); 
+const { createReport, fetchAllReports } = require('../controllers/reportController'); 
 
-router.post('/debate', [
+const router = express.Router();
+
+
+const validateReportSubmission = [
+    body('type')
+        .isIn(['Debate', 'Comment', 'Argument'])
+        .withMessage('Invalid report type specified.'),
+    body('targetId')
+        .isInt({ min: 1 })
+        .withMessage('Target ID must be a positive integer.'),
+    body('reason')
+        .trim()
+        .not()
+        .isEmpty()
+        .withMessage('Reason for reporting cannot be empty.'),
+    body('issueType')
+        .isIn(['Harassment', 'Spam', 'Inappropriate Content', 'Other'])
+        .withMessage('Invalid issue type specified.'),
+];
+
+
+router.post(
+    '/',
     authenticate,
-    body('debateId').isInt().withMessage('Debate ID must be an integer'),
-    body('reason').notEmpty().withMessage('Reason for reporting cannot be empty'),
-    body('issueType').isIn(['Harassment', 'Spam', 'Inappropriate Content', 'Other']).withMessage('Invalid issue type'),
-    validateDebateReport
-], createReport);
+    validateReportSubmission,
+    createReport
+);
 
-router.get('/reports', authenticate, fetchAllReports);
+router.get(
+    '/',
+    authenticate,
+    fetchAllReports
+);
 
 module.exports = router;

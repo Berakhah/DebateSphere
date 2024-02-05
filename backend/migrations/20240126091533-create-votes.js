@@ -4,19 +4,17 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable('Vote', {
       voteId: {
-        allowNull: false,
-        autoIncrement: true,
+        type: Sequelize.INTEGER,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        autoIncrement: true
       },
-      debateId: {
+      argumentId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'Debate',
-          key: 'debateId'
+          model: 'Argument', 
+          key: 'argumentId'
         },
-        onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
       userId: {
@@ -26,15 +24,25 @@ module.exports = {
           model: 'User',
           key: 'userId'
         },
-        onUpdate: 'NO ACTION',
-        onDelete: 'NO ACTION'
+        onDelete: 'CASCADE'
       },
       voteType: {
         type: Sequelize.STRING,
         allowNull: false
+      },
+      createdAt: {
+        allowNull: false,
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+      },
+      updatedAt: {
+        allowNull: false,
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP')
       }
     });
   },
+
   down: async (queryInterface, Sequelize) => {
     await queryInterface.dropTable('Vote');
   }

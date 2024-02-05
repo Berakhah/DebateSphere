@@ -9,15 +9,20 @@ require('dotenv').config();
 
 const app = express();
 const server = http.createServer(app);
-const io = socketIo(server);
+const io = socketIo(server, {
+    cors: {
+        origin: "*", 
+        methods: ["GET", "POST", "PATCH", "DELETE"]
+    }
+});
+
 io.on('connection', (socket) => {
     console.log('A user connected');
   
     socket.on('disconnect', () => {
       console.log('User disconnected');
     });
-  });
-  
+});
 
 app.set('io', io);
 
@@ -33,33 +38,34 @@ const voteRoutes = require('./routes/voteRoutes');
 const commentRoutes = require('./routes/commentRoutes');
 const moderationRoutes = require('./routes/moderationRoutes');
 const argumentRoutes = require('./routes/argumentsRoutes'); 
+// const reportRoutes = require('./routes/reportRoutes');
 
 
 const loginLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000,
-    max: 5,
-    message: 'Too many login attempts from this IP, please try again after an hour',
+    windowMs: 15 * 60 * 1000, 
+    max: 5, 
+    message: 'Too many login attempts from this IP, please try again after 15 minutes',
 });
+
 
 app.use('/api/auth/login', loginLimiter);
 app.use('/api/auth', authRoutes);
 app.use('/api/debates', debateRoutes);
 app.use('/api/votes', voteRoutes);
-app.use('/api', commentRoutes);
+app.use('/api/comments', commentRoutes); 
 app.use('/api/moderation', moderationRoutes);
-// app.use('/api', argumentRoutes);
+app.use('/api/arguments', argumentRoutes); 
+// app.use('/api/reports', reportRoutes); 
+
 
 app.get('/', (req, res) => res.send('Welcome to DebateSphere API!'));
 
-io.on('connection', (socket) => {
-    console.log('New client connected');
-    socket.on('disconnect', () => console.log('Client disconnected'));
-});
 
 app.use((error, req, res, next) => {
     console.error(error);
     res.status(error.status || 500).json({ message: error.message || 'Internal Server Error' });
 });
+
 
 const PORT = process.env.PORT || 3001;
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));

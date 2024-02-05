@@ -4,17 +4,17 @@ import { createDebate } from '../../api/api';
 import { useNavigate } from 'react-router-dom';
 
 const CreateDebate = () => {
-  // State for storing debate details entered by the user
+
   const [debateDetails, setDebateDetails] = useState({
     title: '',
     description: '',
     category: '',
     date: '',
     time: '',
-    visibility: 'public' // Defaulting the visibility to public
+    visibility: 'public'
   });
 
-  // State for storing any validation errors
+  
   const [errors, setErrors] = useState({});
   // State to indicate whether the form is currently being submitted
   const [isSubmitting, setIsSubmitting] = useState(false);

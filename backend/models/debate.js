@@ -30,7 +30,7 @@ module.exports = (sequelize) => {
         status: {
             type: DataTypes.STRING,
             allowNull: false,
-            defaultValue: 'Scheduled', // Possible values: Scheduled, Active, Completed, Cancelled
+            defaultValue: 'Scheduled',
             field: 'Status'
         },
         topicCategory: {
@@ -42,7 +42,7 @@ module.exports = (sequelize) => {
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
-                model: 'User', // This should match the table name exactly
+                model: 'User', 
                 key: 'userId'
             },
             field: 'CreatorUserID'
@@ -50,8 +50,8 @@ module.exports = (sequelize) => {
     }, {
         sequelize,
         modelName: 'Debate',
-        tableName: 'Debate', // Ensure this matches your actual SQL table name
-            timestamps: false, // Enable Sequelize-managed timestamps
+        tableName: 'Debate',
+            timestamps: false, 
     indexes: [{ fields: ['creatorUserId'] }],
     });
 

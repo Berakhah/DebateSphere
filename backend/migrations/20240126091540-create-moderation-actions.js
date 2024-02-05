@@ -30,6 +30,14 @@ module.exports = {
           key: 'debateId',
         },
       },
+      targetContentId: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+      },
+      contentType: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
       actionType: {
         type: Sequelize.STRING(50),
         allowNull: false,

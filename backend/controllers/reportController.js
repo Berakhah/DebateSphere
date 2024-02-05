@@ -1,42 +1,47 @@
-//reportController.js
-
-const { Report, Debate } = require('../models'); // Adjust the path as necessary
+const { Report, Debate, Comment, Argument } = require('../models'); 
 const { validationResult } = require('express-validator');
 
 const createReport = async (req, res) => {
-    const { debateId, reason, issueType } = req.body;
+    const { type, targetId, reason, issueType } = req.body;
 
-    try {
-        await Report.create({
-            type: 'debate',
-            targetId: debateId,
-            reporterId: req.user.id,
-            reason,
-            issueType // Include issueType here
-        });
-        return res.json({ message: 'Report submitted successfully.' });
-    } catch (error) {
-        console.error('Error submitting report:', error);
-        return res.status(500).json({ message: 'Error submitting report.' });
-    }
-};
-
-const validateDebateReport = async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
 
-    const { debateId } = req.body;
     try {
-        const debateExists = await Debate.findByPk(debateId);
-        if (!debateExists) {
-            return res.status(404).json({ message: 'Debate not found.' });
+        let target;
+        switch (type) {
+            case 'Debate':
+                target = await Debate.findByPk(targetId);
+                break;
+            case 'Comment':
+                target = await Comment.findByPk(targetId);
+                break;
+            case 'Argument':
+                target = await Argument.findByPk(targetId);
+                break;
+            default:
+                return res.status(400).json({ message: 'Invalid report type specified.' });
         }
-        next();
+
+        if (!target) {
+            return res.status(404).json({ message: `${type} not found.` });
+        }
+
+        await Report.create({
+            type,
+            targetId,
+            reporterId: req.user.id, 
+            reason,
+            issueType,
+            reviewed: false 
+        });
+
+        return res.status(201).json({ message: 'Report submitted successfully.' });
     } catch (error) {
-        console.error('Error validating debate report:', error);
-        return res.status(500).json({ message: 'Error validating debate report.' });
+        console.error('Error submitting report:', error);
+        return res.status(500).json({ message: 'Error submitting report.', error: error.message });
     }
 };
 
@@ -46,12 +51,11 @@ const fetchAllReports = async (req, res) => {
         return res.json(reports);
     } catch (error) {
         console.error('Error fetching reports:', error);
-        return res.status(500).json({ message: 'Error fetching reports.' });
+        return res.status(500).json({ message: 'Error fetching reports.', error: error.message });
     }
 };
 
 module.exports = {
     createReport,
-    validateDebateReport,
     fetchAllReports
 };
