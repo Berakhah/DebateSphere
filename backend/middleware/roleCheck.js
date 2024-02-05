@@ -1,4 +1,5 @@
 // middleware/roleCheck.js
+
 const checkRole = (roles) => {
     return (req, res, next) => {
         if (!roles.includes(req.user.role)) {
@@ -7,5 +8,11 @@ const checkRole = (roles) => {
         next();
     };
 };
+const checkAdmin = (req, res, next) => {
+    if (req.user.role !== 'admin') {
+        return res.status(403).json({ message: 'Access denied.' });
+    }
+    next();
+};
 
-module.exports = { checkRole };
+module.exports = { checkRole, checkAdmin };

@@ -15,9 +15,7 @@ module.exports = (sequelize) => {
             references: {
                 model: 'User',
                 key: 'userId'
-            },
-            onDelete: 'NO ACTION',
-            onUpdate: 'NO ACTION'
+            }
         },
         targetUserId: {
             type: DataTypes.INTEGER,
@@ -25,21 +23,23 @@ module.exports = (sequelize) => {
                 model: 'User',
                 key: 'userId'
             },
-            onDelete: 'SET NULL',
-            onUpdate: 'NO ACTION'
+            onDelete: 'SET NULL'
         },
-        targetDebateId: {
+        targetContentId: {
             type: DataTypes.INTEGER,
-            references: {
-                model: 'Debate',
-                key: 'debateId'
-            },
-            onDelete: 'SET NULL', 
-            onUpdate: 'NO ACTION'
+            allowNull: true
+        },
+        contentType: {
+            type: DataTypes.STRING,
+            allowNull: true
         },
         actionType: {
             type: DataTypes.STRING(50),
             allowNull: false
+        },
+        description: {
+            type: DataTypes.TEXT,
+            allowNull: true
         },
         timestamp: {
             type: DataTypes.DATE,
