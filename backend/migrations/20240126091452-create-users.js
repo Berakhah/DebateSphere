@@ -33,6 +33,18 @@ module.exports = {
       },
       verificationToken: {
         type: Sequelize.STRING
+      },
+      isBanned: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
+      },
+      isSuspended: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
+      },
+      warningCount: {
+        type: Sequelize.INTEGER,
+        defaultValue: 0
       }
     });
   },

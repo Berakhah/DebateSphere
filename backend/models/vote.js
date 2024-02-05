@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'Debate', // This is the table name
+        model: 'Debate', 
         key: 'debateId'
       },
       onDelete: 'CASCADE',
@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'User', // This is the table name
+        model: 'User', 
         key: 'userId'
       },
       onDelete: 'NO ACTION',

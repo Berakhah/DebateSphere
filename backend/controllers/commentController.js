@@ -15,18 +15,13 @@ const commentController = {
 
         const { content } = req.body;
         const { debateId } = req.params;
-        const userId = req.user?.id; // Use optional chaining to avoid null reference errors
+        const userId = req.user?.id; 
 
         // Check if the content includes prohibited keywords
         if (!isContentAppropriate(content)) {
             return res.status(400).json({ message: "Content includes prohibited keywords." });
         }
 
-        // Temporarily disabling AI content moderation
-        // const isCommentAppropriate = await checkContentWithAI(content);
-        // if (!isCommentAppropriate) {
-        //     return res.status(400).json({ message: "Content flagged as inappropriate by AI filter." });
-        // }
 
         try {
             // Validate debateId and userId
@@ -51,7 +46,7 @@ const commentController = {
         }
     },
 
-    // Additional methods for comment moderation could be implemented here
+
 };
 
 module.exports = commentController;

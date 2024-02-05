@@ -13,7 +13,7 @@ module.exports = {
                 type: Sequelize.INTEGER,
                 allowNull: false,
                 references: {
-                    model: 'User', // Note: Sequelize often pluralizes table names, adjust accordingly
+                    model: 'User', 
                     key: 'userId'
                 },
                 onDelete: 'NO ACTION',
@@ -25,16 +25,16 @@ module.exports = {
                     model: 'User',
                     key: 'userId'
                 },
-                onDelete: 'SET NULL', // Adjust according to your business logic
+                onDelete: 'SET NULL',
                 onUpdate: 'NO ACTION'
             },
             targetDebateId: {
                 type: Sequelize.INTEGER,
                 references: {
-                    model: 'Debate', // Adjust according to your table name
+                    model: 'Debate',
                     key: 'debateId'
                 },
-                onDelete: 'SET NULL', // Adjust according to your business logic
+                onDelete: 'SET NULL', 
                 onUpdate: 'NO ACTION'
             },
             actionType: {

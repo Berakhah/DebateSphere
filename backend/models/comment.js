@@ -38,7 +38,7 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'Comment',
     tableName: 'Comment',
-    timestamps: true
+    timestamps: false
   });
 
   Comment.associate = function(models) {

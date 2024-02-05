@@ -7,9 +7,8 @@ const router = express.Router();
 
 // Route for posting a comment
 router.post('/debates/:debateId/comments', authenticate, [
-    // Validation Middleware (as an example)
     body('content').trim().isLength({ min: 1 }).withMessage('Comment content cannot be empty'),
-    // You can add more validators as needed
+
 ], (req, res) => {
     // Handle the validation result
     const errors = validationResult(req);

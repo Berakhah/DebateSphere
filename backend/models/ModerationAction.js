@@ -25,7 +25,7 @@ module.exports = (sequelize) => {
                 model: 'User',
                 key: 'userId'
             },
-            onDelete: 'SET NULL', // Adjust according to your business logic
+            onDelete: 'SET NULL',
             onUpdate: 'NO ACTION'
         },
         targetDebateId: {
@@ -34,7 +34,7 @@ module.exports = (sequelize) => {
                 model: 'Debate',
                 key: 'debateId'
             },
-            onDelete: 'SET NULL', // Adjust according to your business logic
+            onDelete: 'SET NULL', 
             onUpdate: 'NO ACTION'
         },
         actionType: {

@@ -8,9 +8,12 @@ const User = (sequelize, DataTypes) => {
         profileInformation: DataTypes.TEXT,
         verified: DataTypes.BOOLEAN,
         verificationToken: DataTypes.STRING,
+        isBanned: { type: DataTypes.BOOLEAN, defaultValue: false },
+        isSuspended: { type: DataTypes.BOOLEAN, defaultValue: false },
+        warningCount: { type: DataTypes.INTEGER, defaultValue: 0 },
     }, {
         timestamps: false,
-        tableName: 'User' // Ensure this matches your actual SQL table name
+        tableName: 'User' 
     });
 };
 module.exports = User;

@@ -34,7 +34,8 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: DataTypes.NOW
     }
   }, {
-    tableName: 'Argument'
+    tableName: 'Argument',
+    timestamps: true,
   });
 
   Argument.associate = function(models) {
