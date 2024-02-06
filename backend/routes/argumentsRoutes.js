@@ -1,6 +1,6 @@
 const express = require('express');
 const { body } = require('express-validator');
-const { authenticate } = require('../middleware/authMiddleware'); // Adjust the import path as necessary
+const { authenticate } = require('../middleware/authMiddleware');
 const argumentController = require('../controllers/argumentController');
 const { validationResult } = require('express-validator');
 

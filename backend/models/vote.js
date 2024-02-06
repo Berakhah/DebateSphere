@@ -33,17 +33,28 @@ module.exports = (sequelize) => {
             validate: {
                 isIn: [['upvote', 'downvote']] 
             }
-        }
+        },
+        debateId: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+                model: 'Debate',
+                key: 'debateId'
+            },
+            onDelete: 'CASCADE'
+        },
     }, {
         sequelize,
         modelName: 'Vote',
-        tableName: 'Votes', 
+        tableName: 'Vote', 
         timestamps: true 
     });
 
     Vote.associate = function(models) {
         Vote.belongsTo(models.Argument, {foreignKey: 'argumentId', as: 'argument'}); 
         Vote.belongsTo(models.User, {foreignKey: 'userId', as: 'user'}); 
+        Vote.belongsTo(models.Debate, {foreignKey: 'debateId', as: 'debate'}); 
+
     };
 
     return Vote;

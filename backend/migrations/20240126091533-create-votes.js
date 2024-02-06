@@ -26,6 +26,15 @@ module.exports = {
         },
         onDelete: 'CASCADE'
       },
+      debateId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+            model: 'Debate',
+            key: 'debateId'
+        },
+        onDelete: 'CASCADE'
+    },
       voteType: {
         type: Sequelize.STRING,
         allowNull: false

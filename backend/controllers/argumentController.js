@@ -44,7 +44,7 @@ const argumentController = {
                 include: [{
                     model: User,
                     as: 'author',
-                    attributes: ['username', 'name']
+                    attributes: ['name']
                 }]
             });
             console.log('Arguments fetched successfully for debate:', debateId);
