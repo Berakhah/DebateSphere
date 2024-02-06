@@ -9,7 +9,6 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false,
             validate: {
-                // Now includes 'Argument' as a reportable type
                 isIn: [['Debate', 'Comment', 'Argument']]
             },
         },
