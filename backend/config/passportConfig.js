@@ -1,7 +1,6 @@
 const passport = require('passport');
 const { Strategy: JwtStrategy, ExtractJwt } = require('passport-jwt');
-const { User } = require('../models/user'); // Adjust the path as necessary based on your project structure
-
+const { User } = require('../models/user'); 
 module.exports = function(passport) {
     const options = {
         jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),

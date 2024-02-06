@@ -41,7 +41,6 @@ const checkDebateOwnership = async (req, res, next) => {
             return res.status(404).send({ message: "Debate not found." });
         }
 
-        // Allow moderators or admins to bypass ownership check
         if (['moderator', 'administrator'].includes(req.user.role)) {
             return next();
         }

@@ -1,4 +1,4 @@
-require('dotenv').config(); // at the top of the file
+require('dotenv').config(); 
 
 module.exports = {
   "development": {
@@ -7,7 +7,7 @@ module.exports = {
     "database": process.env.DB_NAME,
     "host": process.env.DB_HOST,
     "port": process.env.DB_PORT,
-    "dialect": "mariadb", // Ensure dialect is 'postgres'
+    "dialect": "mariadb", 
     "logging": console.log
     },
     
@@ -17,7 +17,7 @@ module.exports = {
     "database": process.env.DB_NAME,
     "host": process.env.DB_HOST,
     "port": process.env.DB_PORT,
-    "dialect": "mariadb", // Ensure dialect is 'postgres'
+    "dialect": "mariadb", 
     "logging": console.log,
   },
   "production": {
@@ -26,7 +26,7 @@ module.exports = {
     "database": process.env.DB_NAME,
     "host": process.env.DB_HOST,
     "port": process.env.DB_PORT,
-    "dialect": "mariadb", // Ensure dialect is 'postgres'
+    "dialect": "mariadb", 
     "logging": console.log,
   }
 };

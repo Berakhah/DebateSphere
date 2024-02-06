@@ -1,4 +1,3 @@
-// middleware/restrictAccess.js
 const { User } = require('../models');
 
 const restrictAccess = async (req, res, next) => {

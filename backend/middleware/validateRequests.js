@@ -1,6 +1,3 @@
-//middleware/validateRequests.js
-
-
 const { check, validationResult } = require('express-validator');
 const { isContentAppropriate } = require('../utilities/contentFilter');
 

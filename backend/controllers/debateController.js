@@ -5,10 +5,10 @@ const { validationResult } = require('express-validator');
 const { Sequelize, Op } = require('sequelize');
 const db = require('../models');
 const moment = require('moment');
-const { isValid } = require('date-fns'); // Ensure you've imported isValid
+const { isValid } = require('date-fns'); 
 
 
-// Standalone function for building the search query
+
 const buildSearchQuery = ({ keyword, status, startDate, endDate, category }) => {
     const conditions = [];
     
