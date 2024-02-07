@@ -1,27 +1,25 @@
 .vote-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .vote-button {
-    padding: 5px 10px;
-    margin: 0 5px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  
-  .vote-button:hover {
-    background-color: #0056b3;
-  }
-  
-  .vote-button.voted {
-    background-color: #28a745; /* Different color to indicate the vote state */
-  }
-  
-  /* Add more styles as needed */
-  
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.vote-button {
+  padding: 5px 10px;
+  border: 1px solid #ddd;
+  background-color: #f5f5f5;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.vote-button.voted,
+.vote-button:hover {
+  color: #fff;
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.vote-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}

@@ -1,101 +1,79 @@
-/* Define colors as CSS variables for easy theme management */
-:root {
-    --bg-color: #313035;
-    --border-color: #2ecdaa;
-    --link-color: #fff;
-    --hover-bg-color: #222;
-}
-
-nav {
-    padding-left: 20px;
-    background-color: var(--bg-color);
-    height: 50px;
+header {
+    background-color: #333;
+    color: #ffffff;
+    padding: 10px 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add box shadow for a subtle effect */
+  }
+  
+  nav {
     display: flex;
-    justify-content: flex-start; /* Updated from start to flex-start */
+    justify-content: space-between;
     align-items: center;
-    border: 1px solid var(--border-color);
-    border-radius: 5px;
-    box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.5);
-}
-
-
-nav ul {
-    list-style: none;
+  }
+  
+  nav ul {
+    list-style-type: none;
     padding: 0;
     margin: 0;
-    display: flex; /* Added for inline display of list items */
-}
-
-nav li {
-    margin-right: 10px; /* Add spacing between navigation items */
-}
-
-nav a {
-    color: var(--link-color);
+    display: flex;
+  }
+  
+  nav ul li {
+    padding: 0 15px; 
+  }
+  
+  nav ul li a {
+    color: #ffffff;
     text-decoration: none;
-    padding: 10px 15px;
-    font-weight: bold;
-    border: 1px solid white;
-    transition: background-color 0.3s; /* Smooth transition for hover effect */
-}
-
-nav a:hover {
-    background-color: var(--hover-bg-color);
-}
-
-/* Add a class for the collapsed menu state */
-.collapse {
-    display: none; /* Hide the menu when collapsed */
-}
-
-/* Style for the menu button */
-.menu-button {
-    background-color: var(--bg-color); /* Use the same background color as the navbar */
-    color: var(--link-color);
+    transition: color 0.3s ease; 
+  }
+  
+  nav ul li a:hover {
+    color: #ffd700; 
+  }
+  
+  .menu-button {
+    display: none;
+    background-color: #333;
+    color: #ffffff;
     border: none;
-    padding: 10px 15px;
+    padding: 10px 20px;
     font-size: 16px;
-    display: none; /* Initially hidden */
-}
+  }
+  
+  .collapse {
+    display: none;
+  }
+  
 
-/* Responsive design for smaller screens */
-@media (max-width: 768px) {
+  @media (max-width: 768px) {
     .menu-button {
-        display: block; /* Show the button */
+      display: block;
     }
-
-        /* Add styles for when the menu is not collapsed */
-    .collapse.show {
-        display: flex;
-        flex-direction: column;
-        width: 100%; /* Full width */
     }
-
-    /* Ensure the collapsed menu is not displayed */
     .collapse {
-        display: none;
+      display: flex;
+      flex-direction: column;
+      background-color: #222;
+      padding: 10px; 
     }
-
+  
     nav ul {
-        flex-direction: column; /* Stack the links vertically */
-        align-items: flex-start;
-        width: 100%;
+      flex-direction: column;
+      padding: 0; 
     }
-
-    nav li {
-        text-align: center; /* Center the links */
-        width: 100%; /* Full width */
+  
+    nav ul li {
+      text-align: center;
+      padding: 10px 0; 
+  
+    nav ul li a {
+      color: #ffffff;
+      text-decoration: none;
+      transition: color 0.3s ease; 
     }
-
-    nav a {
-        display: block; /* Block level makes the whole area clickable */
-        margin: 0; /* Reset margins */
+  
+    nav ul li a:hover {
+      color: #ffd700; 
     }
-
-    /* Combine both .collapse and nav ul for better clarity and to avoid duplication */
-    .collapse, nav ul {
-        display: flex; /* Adjust display property */
-        flex-direction: column;
-        width: 100%; /* Full width */
-    }
-}
+  }

@@ -1,0 +1,37 @@
+.reports-list-container {
+    max-width: 600px;
+    margin: 20px auto;
+    background: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+  }
+  
+  .reports-list-container h2 {
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  li {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+  }
+  
+  li:last-child {
+    border-bottom: none;
+  }
+  
+  li p {
+    margin: 5px 0;
+    color: #333;
+  }
+  
+  .error {
+    color: #e74c3c;
+  }
+  

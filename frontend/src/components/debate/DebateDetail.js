@@ -27,11 +27,11 @@ const DebateDetail = ({ match }) => {
   }, [debateId]);
 
   if (error) {
-    return <p>Error: {error}</p>; // Display error message if any
+    return <p>Error: {error}</p>;
   }
 
   if (!debate) {
-    return <p>Loading...</p>; // Display loading indicator while fetching data
+    return <p>Loading...</p>; 
   }
 
   return (

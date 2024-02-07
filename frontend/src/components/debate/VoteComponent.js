@@ -1,46 +1,45 @@
 import React, { useState } from 'react';
 import { submitVote, updateVote, revokeVote } from '../../api/api'; 
-import './VoteComponent.css';
+import './VoteComponent.css'; 
 
 const VoteComponent = ({ debateId, argumentId }) => {
-  const [vote, setVote] = useState(0); // 0 for no vote, 1 for upvote, -1 for downvote
+  const [vote, setVote] = useState(0); // 0: no vote, 1: upvote, -1: downvote
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleVote = async (value) => {
-    if (vote === value) {
-      // Revoke vote if the same button is clicked again
-      try {
+  const handleVoteChange = async (newVote) => {
+    if (isLoading) return; // Prevent multiple requests if one is already in progress
+    setIsLoading(true);
+
+    try {
+      if (vote === newVote) {
+        // If the same vote button is clicked, revoke the vote
         await revokeVote(debateId, argumentId);
         setVote(0);
-      } catch (error) {
-        console.error("Error revoking vote:", error);
+      } else {
+        // Submit or update vote
+        newVote === 1 ? await submitVote(debateId, argumentId, { vote: newVote }) : await updateVote(debateId, argumentId, { vote: newVote });
+        setVote(newVote);
       }
-    } else {
-      try {
-        if (vote === 0) {
-          // New vote
-          await submitVote(debateId, { argumentId, vote: value });
-        } else {
-          // Updating existing vote
-          await updateVote(debateId, { argumentId, vote: value });
-        }
-        setVote(value);
-      } catch (error) {
-        console.error("Error submitting/updating vote:", error);
-      }
+    } catch (error) {
+      console.error("Error handling vote:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
     <div className="vote-container">
       <button 
+        disabled={isLoading}
         className={`vote-button ${vote === 1 ? 'voted' : ''}`} 
-        onClick={() => handleVote(1)}
+        onClick={() => handleVoteChange(1)}
       >
         Upvote
       </button>
       <button 
+        disabled={isLoading}
         className={`vote-button ${vote === -1 ? 'voted' : ''}`} 
-        onClick={() => handleVote(-1)}
+        onClick={() => handleVoteChange(-1)}
       >
         Downvote
       </button>

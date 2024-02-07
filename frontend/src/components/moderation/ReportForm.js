@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { reportContent } from '../../api/api'; // Adjust the import path as needed
-import './ReportForm.css';
+import { reportContent } from '../../api/api'; 
+import './ReportForm.css'; 
 
 const ReportForm = ({ contentId }) => {
   const [reportDetails, setReportDetails] = useState({
     reason: '',
     details: '',
-    contentId, // Assuming contentId is passed to this component for reporting a specific content
+    contentId,
   });
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -29,15 +29,14 @@ const ReportForm = ({ contentId }) => {
     event.preventDefault();
     if (!validateForm()) {
       console.log("Report is invalid!");
-      return; // Early return if form is invalid
+      return; 
     }
-    
+
     setIsSubmitting(true);
     try {
       await reportContent(reportDetails);
       console.log("Report submitted successfully.");
       setSubmitSuccess(true);
-      // Optionally reset form here or navigate away
     } catch (error) {
       console.error('Reporting content error:', error);
       setErrors({ api: 'Failed to submit report. Please try again later.' });
@@ -46,10 +45,12 @@ const ReportForm = ({ contentId }) => {
     }
   };
 
+
   return (
     <section className="report-form-container">
       {submitSuccess && <p className="success">Report submitted successfully!</p>}
       <form onSubmit={handleSubmit} noValidate>
+        {/* Reason for reporting dropdown */}
         <div className="form-group">
           <label htmlFor="reason">Reason for Reporting</label>
           <select
@@ -60,10 +61,11 @@ const ReportForm = ({ contentId }) => {
             className={errors.reason ? "error-input" : ""}
           >
             <option value="">Select a reason</option>
-            {/* Populate with options */}
+            {/* Add more reasons as options here */}
           </select>
           {errors.reason && <p className="error">{errors.reason}</p>}
         </div>
+        {/* Detailed explanation textarea */}
         <div className="form-group">
           <label htmlFor="details">Details</label>
           <textarea

@@ -279,8 +279,6 @@ export const postComment = async (debateId, commentData) => {
 
 
 
-
-
 export const deleteContent = async (contentType, contentId) => {
   try {
     const response = await fetch(`${API_BASE_URL}/api/moderation/content/${contentType}/${contentId}`, {
@@ -406,4 +404,17 @@ export const listArgumentsForDebate = async (debateId) => {
 };
 
 
-  
+  // api.js
+
+export const getTrendingDebates = async () => {
+  // Fetch trending debates logic
+};
+
+export const getUserStats = async () => {
+  // Fetch user stats logic
+};
+
+export const getRecommendedDebates = async () => {
+  // Fetch recommended debates logic
+};
+

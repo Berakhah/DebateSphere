@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { fetchArchivedDebates } from '../../api/api'; 
+import { fetchArchivedDebates } from '../../api/api';
 import './ArchiveList.css';
 
 const ArchiveList = () => {
@@ -24,11 +24,11 @@ const ArchiveList = () => {
   }, []);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div className="archive-loading">Loading...</div>;
   }
 
   if (error) {
-    return <p className="error">Error: {error}</p>;
+    return <p className="archive-error">Error: {error}</p>;
   }
 
   return (

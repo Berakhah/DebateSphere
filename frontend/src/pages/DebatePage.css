@@ -1,16 +1,56 @@
-/* DebatePage Specific Styles */
-.debate-info {
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+/* Main Content Styling */
+.debate-page-content {
+  padding: 20px;
+  background: #f0f2f5; /* Light background for a subtle contrast */
+  min-height: calc(100vh - 120px); /* Adjust based on your header/footer height */
+}
+
+h1 {
+  color: #333;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Debate List and Create Debate Button Styling */
+.debate-list-container, .create-debate-container {
+  background-color: #fff;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+}
+
+.create-debate-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 40px; /* More space before listing debates */
+}
+
+.create-debate-button {
+  background-color: #007bff; /* Bootstrap primary blue */
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.create-debate-button:hover {
+  background-color: #0056b3; /* Darker shade on hover */
+}
+
+/* Responsiveness */
+@media (max-width: 768px) {
+  .debate-page-content {
+    padding: 10px;
   }
-  
-  .argument-section {
-    border-top: 2px solid #007bff;
-    padding-top: 20px;
+
+  h1 {
+    font-size: 1.5rem; /* Adjust heading size on smaller screens */
   }
-  
-  /* ... Additional DebatePage styles ... */
-  
+
+  .create-debate-container, .debate-list-container {
+    padding: 15px;
+  }
+}
