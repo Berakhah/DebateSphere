@@ -1,33 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import VoteComponent from './VoteComponent';
 import { listArgumentsForDebate } from '../../api/api'; 
-import './ArgumentList.css'; 
-
+import './ArgumentList.css';
 
 const ArgumentItem = ({ argument }) => (
     <li className="argument-item">
-        <p>{argument.content}</p>
-        <div className="vote-section">
-            <VoteComponent argumentId={argument.argumentId} />
-        </div>
+        <div className="argument-content">{argument.content}</div>
+        <VoteComponent argumentId={argument.id} />
     </li>
 );
 
 const ArgumentList = ({ debateId }) => {
     const [argumentList, setArgumentList] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState('');
 
     useEffect(() => {
         const fetchArguments = async () => {
             setIsLoading(true);
-            setError(null);
             try {
-                const _arguments = await listArgumentsForDebate(debateId);
-                setArgumentList(_arguments);
-            } catch (error) {
+                const fetchedArguments = await listArgumentsForDebate(debateId);
+                setArgumentList(fetchedArguments);
+            } catch (err) {
                 setError('Failed to load arguments.');
-                console.error('Error fetching arguments:', error);
+                console.error('Error fetching arguments:', err);
             } finally {
                 setIsLoading(false);
             }
@@ -36,16 +32,17 @@ const ArgumentList = ({ debateId }) => {
         fetchArguments();
     }, [debateId]);
 
-    if (isLoading) return <div>Loading arguments...</div>;
-    if (error) return <div>{error}</div>;
-
     return (
         <section className="argument-list-container">
             <h2>Arguments</h2>
-            {argumentList.length > 0 ? (
+            {isLoading ? (
+                <p>Loading arguments...</p>
+            ) : error ? (
+                <p className="error-message">{error}</p>
+            ) : argumentList.length > 0 ? (
                 <ul>
                     {argumentList.map((argument) => (
-                        <ArgumentItem key={argument.argumentId} argument={argument} />
+                        <ArgumentItem key={argument.id} argument={argument} />
                     ))}
                 </ul>
             ) : (

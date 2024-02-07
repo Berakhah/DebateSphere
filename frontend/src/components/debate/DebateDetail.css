@@ -1,15 +1,49 @@
-.debate-detail-container {
-    max-width: 800px;
-    margin: auto;
-    padding: 20px;
-    background-color: #f9f9f9; /* Light background for the detail area */
-    border-radius: 8px; /* Rounded corners for the container */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-  }
-  
-  .debate-detail-container h2 {
-    margin-bottom: 20px;
-  }
-  
-  /* Add more styles as needed */
-  
+.create-debate-container {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="date"],
+.form-group input[type="time"],
+.form-group select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.error-input {
+  border-color: #e63946;
+}
+
+.error {
+  color: #e63946;
+  margin-top: 5px;
+}
+
+button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:disabled {
+  background-color: #ccc;
+}

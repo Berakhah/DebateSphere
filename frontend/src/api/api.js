@@ -1,6 +1,6 @@
 const API_BASE_URL = 'http://localhost:3001';
 
-// Register User
+
 export const registerUser = async (userData) => {
   try {
     const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
@@ -11,24 +11,21 @@ export const registerUser = async (userData) => {
       body: JSON.stringify(userData)
     });
 
-    const data = await response.json(); // Parse JSON response
+    const data = await response.json(); 
 
     if (response.ok) {
       console.log("Registered successfully!", data);
       return { success: true, data };
     } else {
-      // Handle non-200 responses, e.g., user already exists, validation errors
       console.error('Registration error:', data.message);
       return { success: false, message: data.message };
     }
   } catch (error) {
     console.error('Registration error:', error);
-    // Propagate error to be handled/displayed in the UI
     throw new Error('Failed to register. Please try again later.');
   }
 };
 
-// Login User
 export const loginUser = async (credentials) => {
   try {
     const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
@@ -36,7 +33,7 @@ export const loginUser = async (credentials) => {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(credentials) // Ensure credentials are stringified
+      body: JSON.stringify(credentials)
     });
     const data = await response.json();
 
@@ -51,12 +48,11 @@ export const loginUser = async (credentials) => {
     }
   } catch (error) {
     console.error('Login error:', error);
-    throw error; // Propagate the error to be handled in the component
+    throw error; 
   }
 };
 
 
-// Verify Email
 export const verifyEmail = async (token) => {
   try {
     const response = await fetch(`${API_BASE_URL}/api/auth/verify-email?token=${token}`);
@@ -67,29 +63,77 @@ export const verifyEmail = async (token) => {
 };
 
 
-// Fetch Debates
   export const fetchDebates = async () => {
     try {
       const response = await fetch(`${API_BASE_URL}/api/debates/search`, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`, // Ensure you're managing tokens correctly
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
         },
       });
-      return response.data; // Directly return the list of debates
+      return response.data;
     } catch (error) {
       console.error('Error fetching debates:', error);
-      throw error; // Rethrow the error for handling in the component
+      throw error; 
     }
   };
 
-  // Create Debate
+  export const requestPasswordReset = async (email) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/auth/request-password-reset`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email })
+      });
+  
+      const data = await response.json();
+  
+      if (response.ok) {
+        console.log("Password reset request successful:", data);
+        return { success: true, message: 'Password reset email sent.' };
+      } else {
+        console.error('Password reset request error:', data.message);
+        return { success: false, message: data.message };
+      }
+    } catch (error) {
+      console.error('Password reset request error:', error);
+      throw new Error('Failed to request password reset. Please try again later.');
+    }
+  };
+
+  export const resetPassword = async (token, newPassword) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/auth/reset-password/${token}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ password: newPassword })
+      });
+  
+      const data = await response.json();
+  
+      if (response.ok) {
+        console.log("Password has been reset successfully:", data);
+        return { success: true, message: 'Password reset successfully.' };
+      } else {
+        console.error('Password reset error:', data.message);
+        return { success: false, message: data.message };
+      }
+    } catch (error) {
+      console.error('Password reset error:', error);
+      throw new Error('Failed to reset password. Please try again later.');
+    }
+  };
+  
+
 export const createDebate = async (debateData) => {
   try {
     const response = await fetch(`${API_BASE_URL}/api/debates/create`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        // Include the Authorization header if your API requires authentication
         'Authorization': `Bearer ${localStorage.getItem('token')}`,
       },
       body: JSON.stringify(debateData)
@@ -102,11 +146,10 @@ export const createDebate = async (debateData) => {
     return await response.json();
   } catch (error) {
     console.error('Creating debate error:', error);
-    throw error; // Rethrow the error to handle it in the component
+    throw error; 
   }
 };
 
-// Search Debates
 export const searchDebates = async (searchParams) => {
   try {
     const query = new URLSearchParams(searchParams).toString();
@@ -121,14 +164,14 @@ export const searchDebates = async (searchParams) => {
   }
 };
 
-// Update Debate
+
 export const updateDebate = async (debateId, debateData) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/debates/${debateId}`, {
+    const response = await fetch(`${API_BASE_URL}/api/debates/update/${debateId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('token')}`, // Assumes token is stored in localStorage
+        'Authorization': `Bearer ${localStorage.getItem('token')}`, 
       },
       body: JSON.stringify(debateData),
     });
@@ -137,14 +180,14 @@ export const updateDebate = async (debateId, debateData) => {
       throw new Error(`Error: ${response.status} - ${response.statusText}`);
     }
     
-    return await response.json(); // Return the updated debate data
+    return await response.json(); 
   } catch (error) {
     console.error('Updating debate error:', error);
-    throw error; // Rethrow the error to handle it in the component
+    throw error; 
   }
 };
 
-// Delete Debate
+
 export const deleteDebate = async (debateId) => {
   try {
     const response = await fetch(`${API_BASE_URL}/api/debates/delete/${debateId}`, {
@@ -163,12 +206,12 @@ export const deleteDebate = async (debateId) => {
   }
 };
 
-// Fetch Archived Debates
+
 export const fetchArchivedDebates = async () => {
   try {
     const response = await fetch(`${API_BASE_URL}/api/debates/archived`, {
       headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`, // Assuming authentication is required
+        'Authorization': `Bearer ${localStorage.getItem('token')}`, 
       },
     });
     if (!response.ok) {
@@ -181,51 +224,44 @@ export const fetchArchivedDebates = async () => {
   }
 };
 
-  // Submit a Vote
-export const submitVote = async (debateId, voteData) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/api/votes/debates/${debateId}/vote`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(voteData)
-      });
-      return await response.json();
-    } catch (error) {
-      console.error('Submitting vote error:', error);
-    }
-  };
-  
-  // Update a Vote
-  export const updateVote = async (debateId, voteData) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/api/votes/debates/${debateId}/vote`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(voteData)
-      });
-      return await response.json();
-    } catch (error) {
-      console.error('Updating vote error:', error);
-    }
-  };
-  
-  // Revoke a Vote
-  export const revokeVote = async (debateId) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/api/votes/debates/${debateId}/vote`, {
-        method: 'DELETE'
-      });
-      return await response.json();
-    } catch (error) {
-      console.error('Revoking vote error:', error);
-    }
-  };
 
-  // Post a Comment
+export const submitVote = async (debateId, argumentId, voteData) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/debates/${debateId}/arguments/${argumentId}/vote`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(voteData)
+    });
+    return await response.json();
+  } catch (error) {
+    console.error('Submitting vote error:', error);
+  }
+};
+
+export const updateVote = async (debateId, argumentId, voteData) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/debates/${debateId}/arguments/${argumentId}/vote`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(voteData)
+    });
+    return await response.json();
+  } catch (error) {
+    console.error('Updating vote error:', error);
+  }
+};
+
+export const revokeVote = async (debateId, argumentId) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/debates/${debateId}/arguments/${argumentId}/vote`, {
+      method: 'DELETE'
+    });
+    return await response.json();
+  } catch (error) {
+    console.error('Revoking vote error:', error);
+  }
+};
+
 export const postComment = async (debateId, commentData) => {
     try {
       const response = await fetch(`${API_BASE_URL}/api/debates/${debateId}/comments`, {
@@ -241,75 +277,54 @@ export const postComment = async (debateId, commentData) => {
     }
   };
 
-// Fetch Reports
-export const fetchReports = async () => {
+
+
+
+
+export const deleteContent = async (contentType, contentId) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/reports`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,
-      }
+    const response = await fetch(`${API_BASE_URL}/api/moderation/content/${contentType}/${contentId}`, {
+      method: 'DELETE'
     });
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
     return await response.json();
   } catch (error) {
-    console.error('Fetching reports error:', error);
-    throw error;
+    console.error('Deleting content error:', error);
   }
 };
 
-  
-  // Delete Content
-export const deleteContent = async (contentId) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/api/moderation/content/${contentId}`, {
-        method: 'DELETE'
-      });
-      return await response.json();
-    } catch (error) {
-      console.error('Deleting content error:', error);
-    }
-  };
-  
-  // Suspend User
-  export const suspendUser = async (userId) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/api/moderation/user/${userId}/suspend`, {
-        method: 'POST'
-      });
-      return await response.json();
-    } catch (error) {
-      console.error('Suspending user error:', error);
-    }
-  };
-  
-  // Ban User
-  export const banUser = async (userId) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/api/moderation/user/${userId}/ban`, {
-        method: 'POST'
-      });
-      return await response.json();
-    } catch (error) {
-      console.error('Banning user error:', error);
-    }
-  };
-  
-  // Warn User
-  export const warnUser = async (userId) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/api/moderation/user/${userId}/warn`, {
-        method: 'POST'
-      });
-      return await response.json();
-    } catch (error) {
-      console.error('Warning user error:', error);
-    }
-  };
+export const suspendUser = async (userId) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/moderation/user/${userId}/suspend`, {
+      method: 'PATCH'
+    });
+    return await response.json();
+  } catch (error) {
+    console.error('Suspending user error:', error);
+  }
+};
 
-  // Report Content
+export const banUser = async (userId) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/moderation/user/${userId}/ban`, {
+      method: 'PATCH'
+    });
+    return await response.json();
+  } catch (error) {
+    console.error('Banning user error:', error);
+  }
+};
+
+export const warnUser = async (userId) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/moderation/user/${userId}/warn`, {
+      method: 'PATCH'
+    });
+    return await response.json();
+  } catch (error) {
+    console.error('Warning user error:', error);
+  }
+};
+
 export const reportContent = async (reportData) => {
   try {
     const response = await fetch(`${API_BASE_URL}/api/reports/debate`, {
@@ -330,10 +345,27 @@ export const reportContent = async (reportData) => {
   }
 };
   
-// Post an Argument
+export const fetchReports = async () => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/reports`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+      }
+    });
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('Fetching reports error:', error);
+    throw error;
+  }
+};
+
 export const postArgument = async (debateId, argumentData) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/debate/${debateId}/argument`, {
+    const response = await fetch(`${API_BASE_URL}/api/debate/${debateId}/arguments`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -349,11 +381,11 @@ export const postArgument = async (debateId, argumentData) => {
     return await response.json();
   } catch (error) {
     console.error('Posting argument error:', error);
-    throw error; // Propagate the error for handling it in UI
+    throw error; 
   }
 };
 
-// List Arguments for a Debate
+
 export const listArgumentsForDebate = async (debateId) => {
   try {
     const response = await fetch(`${API_BASE_URL}/api/debate/${debateId}/arguments`, {
@@ -369,7 +401,7 @@ export const listArgumentsForDebate = async (debateId) => {
     return await response.json();
   } catch (error) {
     console.error('Listing arguments for debate error:', error);
-    throw error; // Propagate the error for handling it in UI
+    throw error; 
   }
 };
 

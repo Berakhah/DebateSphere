@@ -1,7 +1,6 @@
-// DebateList.js
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { fetchDebates } from '../../api/api'; // Adjust the import path to your api.js
+import { fetchDebates } from '../../api/api'; // Ensure the import path is correct
 import './DebateList.css';
 
 const DebateList = () => {
@@ -25,32 +24,28 @@ const DebateList = () => {
     loadDebates();
   }, []);
 
-  if (isLoading) {
-    return <div className="debate-list-loading">Loading debates...</div>;
-  }
-
-  if (error) {
-    return <div className="debate-list-error">Error: {error}</div>;
-  }
-
   return (
-    <section className="debate-list-container">
+    <div className="debate-list">
       <h2>Debates</h2>
-      {debates.length > 0 ? (
+      {isLoading ? (
+        <div>Loading debates...</div>
+      ) : error ? (
+        <div>Error: {error}</div>
+      ) : (
         <ul>
-          {debates.map(debate => (
-            <li key={debate.id}>
-              <h3>{debate.title}</h3>
-              <p>{debate.description}</p>
-              <p>Scheduled for: {debate.date} at {debate.time}</p>
-              <Link to={`/debate/${debate.id}`}>View Details</Link>
+          {debates.map((debate) => (
+            <li key={debate.id} className="debate-item">
+              <div className="debate-content">
+                <h3>{debate.title}</h3>
+                <p>{debate.description}</p>
+                <small>Scheduled for: {debate.date} at {debate.time}</small>
+              </div>
+              <Link to={`/debate/${debate.id}`} className="view-details">View Details</Link>
             </li>
           ))}
         </ul>
-      ) : (
-        <p>No debates found.</p>
       )}
-    </section>
+    </div>
   );
 };
 

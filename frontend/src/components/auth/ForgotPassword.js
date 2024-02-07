@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import './ForgotPassword.css'; 
+import { requestPasswordReset } from '../../api/api';
+import './ForgotPassword.css';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [message, setMessage] = useState(''); 
 
   const validateForm = () => {
     let tempErrors = {};
@@ -13,16 +15,16 @@ const ForgotPassword = () => {
     return Object.values(tempErrors).every(x => x === "");
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     if (validateForm()) {
       setIsSubmitting(true);
-      console.log("Password reset request is valid!");
-      // Simulate an API call
-      setTimeout(() => {
-        setIsSubmitting(false);
-        // Here you would handle the password reset logic
-      }, 2000);
+      const response = await requestPasswordReset(email);
+      setIsSubmitting(false);
+      setMessage(response.message); 
+      if (!response.success) {
+        setErrors({ api: response.message });
+      }
     } else {
       console.log("Password reset request is invalid!");
     }
@@ -45,6 +47,7 @@ const ForgotPassword = () => {
         <button type="submit" disabled={isSubmitting}>
           {isSubmitting ? 'Sending reset link...' : 'Send Reset Link'}
         </button>
+        {message && <p className={errors.api ? "error" : "success"}>{message}</p>}
       </form>
     </section>
   );
