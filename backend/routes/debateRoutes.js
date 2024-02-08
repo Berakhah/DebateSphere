@@ -34,4 +34,7 @@ router.get('/search', debateController.searchDebates);
 // Endpoint for retrieving archived debates
 router.get('/archived', debateController.getArchivedDebates);
 
+router.get('/debates/:debateId', debateController.fetchDebateDetail);
+
+
 module.exports = router;

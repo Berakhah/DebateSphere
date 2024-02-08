@@ -50,7 +50,7 @@ const loginLimiter = rateLimit({
 
 app.use('/api/auth/login', loginLimiter);
 app.use('/api/auth', authRoutes);
-app.use('/api/debates', debateRoutes);
+app.use('/api', debateRoutes);
 app.use('/api', voteRoutes);
 app.use('/api', commentRoutes); 
 app.use('/api/moderation', moderationRoutes);

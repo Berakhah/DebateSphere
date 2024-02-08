@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
-import { updateDebate } from '../../api/api'; // Adjust according to your project structure
+import { updateDebate } from '../../api/api'; // Adjust this import as necessary
 
 const EditDebate = () => {
   const [debateDetails, setDebateDetails] = useState({
@@ -11,41 +11,38 @@ const EditDebate = () => {
     topicCategory: '',
   });
   const [errors, setErrors] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [successMessage, setSuccessMessage] = useState('');
 
   const navigate = useNavigate();
   const { debateId } = useParams();
+  const API_BASE_URL = 'http://localhost:3001';
 
   useEffect(() => {
-    const fetchDebateDetails = async () => {
-      setIsLoading(true);
-      try {
-        // Replace the URL with your actual endpoint
-        const response = await axios.get(`http://localhost:3001/api/debates/${debateId}`, {
-          headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
-        });
-        // Assuming the API returns the exact format needed by the form
-        setDebateDetails({
-          title: response.data.title,
-          description: response.data.description,
-          dateTime: response.data.dateTime.slice(0, 16), // Adjust for 'datetime-local' input compatibility
-          topicCategory: response.data.topicCategory,
-        });
-      } catch (err) {
-        console.error("Error fetching debate details:", err);
-        setErrors({ fetch: err.message || "Could not fetch debate details." });
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchDebateDetails();
-  }, [debateId]);
+    setIsLoading(true);
+    axios.get(`${API_BASE_URL}/api/debates/update/${debateId}`, {
+      headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
+    })
+    .then(response => {
+      const { title, description, dateTime, topicCategory } = response.data;
+      setDebateDetails({
+        title,
+        description,
+        dateTime: dateTime.slice(0, 16), 
+        topicCategory,
+      });
+      setIsLoading(false);
+    })
+    .catch(error => {
+      console.error("Error fetching debate details:", error);
+      setErrors({ fetch: error.message || "Could not fetch debate details." });
+      setIsLoading(false);
+    });
+  }, [debateId, API_BASE_URL]);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    setDebateDetails(prevDetails => ({ ...prevDetails, [name]: value }));
+    setDebateDetails({ ...debateDetails, [name]: value });
   };
 
   const validateForm = () => {
@@ -65,50 +62,53 @@ const EditDebate = () => {
       return;
     }
 
-    setIsLoading(true);
-    try {
-      // Make sure to adjust this function to match your API's requirements
-      await updateDebate(debateId, debateDetails);
-      setSuccessMessage('Debate updated successfully.');
-      setTimeout(() => navigate('/debates'), 2000); // Redirect after successful update
-    } catch (error) {
-      console.error("Error updating debate:", error);
-      setErrors({ api: error.message || "An error occurred. Please try again later." });
-    } finally {
-      setIsLoading(false);
-    }
+    updateDebate(debateId, debateDetails)
+      .then(() => {
+        setSuccessMessage('Debate updated successfully.');
+        setTimeout(() => navigate('/debates'), 2000); 
+      })
+      .catch(error => {
+        console.error("Error updating debate:", error);
+        setErrors({ api: error.message || "An error occurred. Please try again later." });
+      });
   };
 
   return (
-    <section className="edit-debate-container">
-      <h2>Edit Debate</h2>
-      {successMessage && <p className="success">{successMessage}</p>}
-      {errors.api && <p className="error">{errors.api}</p>}
-      <form onSubmit={handleSubmit} noValidate className="edit-debate-form">
+    <section className="max-w-4xl mx-auto px-4 py-8">
+      <h2 className="text-xl font-semibold mb-6">Edit Debate</h2>
+      {successMessage && <p className="text-green-500">{successMessage}</p>}
+      {errors.api && <p className="text-red-500">{errors.api}</p>}
+      <form onSubmit={handleSubmit} noValidate className="space-y-6">
         <div className="form-group">
-          <label htmlFor="title">Title</label>
-          <input type="text" id="title" name="title" value={debateDetails.title} onChange={handleInputChange} className={errors.title ? "error-input" : ""} />
-          {errors.title && <p className="error">{errors.title}</p>}
+          <label htmlFor="title" className="block text-sm font-medium text-gray-700">Title</label>
+          <input type="text" id="title" name="title" value={debateDetails.title} onChange={handleInputChange} className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 ${errors.title ? "border-red-500" : ""}`} />
+          {errors.title && <p className="text-red-500 text-xs italic">{errors.title}</p>}
         </div>
         <div className="form-group">
-          <label htmlFor="description">Description</label>
-          <textarea id="description" name="description" value={debateDetails.description} onChange={handleInputChange} className={errors.description ? "error-input" : ""}></textarea>
-          {errors.description && <p className="error">{errors.description}</p>}
+          <label htmlFor="description" className="block text-sm font-medium text-gray-700">Description</label>
+          <textarea id="description" name="description" value={debateDetails.description} onChange={handleInputChange} className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 ${errors.description ? "border-red-500" : ""}`}></textarea>
+          {errors.description && <p className="text-red-500 text-xs italic">{errors.description}</p>}
         </div>
         <div className="form-group">
-          <label htmlFor="dateTime">Date and Time</label>
-          <input type="datetime-local" id="dateTime" name="dateTime" value={debateDetails.dateTime} onChange={handleInputChange} className={errors.dateTime ? "error-input" : ""} />
-          {errors.dateTime && <p className="error">{errors.dateTime}</p>}
+          <label htmlFor="dateTime" className="block text-sm font-medium text-gray-700">Date and Time</label>
+          <input type="datetime-local" id="dateTime" name="dateTime" value={debateDetails.dateTime} onChange={handleInputChange} className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 ${errors.dateTime ? "border-red-500" : ""}`} />
+          {errors.dateTime && <p className="text-red-500 text-xs italic">{errors.dateTime}</p>}
         </div>
         <div className="form-group">
-          <label htmlFor="topicCategory">Category</label>
-          <select id="topicCategory" name="topicCategory" value={debateDetails.topicCategory} onChange={handleInputChange} className={errors.topicCategory ? "error-input" : ""}>
-            <option value="">Select a Category</option>
-            {/* Populate this select with actual categories */}
+          <label htmlFor="topicCategory" className="block text-sm font-medium text-gray-700">Category</label>
+          <select id="topicCategory" name="topicCategory" value={debateDetails.topicCategory} onChange={handleInputChange} className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 ${errors.topicCategory ? "border-red-500" : ""}`}>
+          <option value="">Select a Category</option>
+            <option value="politics">Politics</option>
+            <option value="science">Science</option>
+            <option value="technology">Technology</option>
+            <option value="health">Health</option>
+            <option value="environment">Environment</option>
           </select>
-          {errors.topicCategory && <p className="error">{errors.topicCategory}</p>}
+          {errors.topicCategory && <p className="text-red-500 text-xs italic">{errors.topicCategory}</p>}
         </div>
-        <button type="submit" disabled={isLoading}>{isLoading ? 'Updating...' : 'Update Debate'}</button>
+        <button type="submit" disabled={isLoading} className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+          {isLoading ? 'Updating...' : 'Update Debate'}
+        </button>
       </form>
     </section>
   );

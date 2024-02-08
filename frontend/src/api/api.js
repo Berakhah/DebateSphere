@@ -65,7 +65,7 @@ export const verifyEmail = async (token) => {
 
 export const fetchDebates = async () => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/debates/search`, {
+    const response = await fetch(`${API_BASE_URL}/api/search`, {
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('token')}`,
       },
@@ -135,7 +135,7 @@ export const fetchDebates = async () => {
 
 export const createDebate = async (debateData) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/debates/create`, {
+    const response = await fetch(`${API_BASE_URL}/api/create`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -158,7 +158,7 @@ export const createDebate = async (debateData) => {
 export const searchDebates = async (searchParams) => {
   try {
     const query = new URLSearchParams(searchParams).toString();
-    const response = await fetch(`${API_BASE_URL}/api/debates/search?${query}`);
+    const response = await fetch(`${API_BASE_URL}/api/search?${query}`);
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
@@ -172,7 +172,7 @@ export const searchDebates = async (searchParams) => {
 
 export const updateDebate = async (debateId, debateData) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/debates/update/${debateId}`, {
+    const response = await fetch(`${API_BASE_URL}/api/update/${debateId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -391,7 +391,7 @@ export const postArgument = async (debateId, argumentData) => {
 
 export const listArgumentsForDebate = async (debateId) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/debate/${debateId}/arguments`, {
+    const response = await fetch(`${API_BASE_URL}/api/debates/${debateId}/arguments`, {
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('token')}`,
       },
@@ -423,3 +423,23 @@ export const getRecommendedDebates = async () => {
   // Fetch recommended debates logic
 };
 
+export const fetchDebateDetail = async (debateId) => {
+  try {
+    // Adjusted the URL to include the '/api' prefix before '/debates'
+    const response = await fetch(`${API_BASE_URL}/debates/${debateId}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`, // Ensure this token is being set correctly elsewhere in your application
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Fetching debate detail error:', error);
+    throw error; // Consider handling this error more gracefully in your UI
+  }
+};

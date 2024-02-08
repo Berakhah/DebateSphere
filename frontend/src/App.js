@@ -14,7 +14,7 @@ import RegisterPage from './components/auth/Register';
 import ForgotPasswordPage from './components/auth/ForgotPassword';
 import EditDebate from './components/debate/EditDebate';
 import DebateList from './components/debate/DebateList';
-import DebateDetail from './components/debate/DebateDetail'; // Path to your DebateDetail component
+import DebateSession from './components/debate/DebateSession'; // Path to your DebateDetail component
 
 import './index.css';
 
@@ -34,7 +34,7 @@ function App() {
         <Route path="/debate/:id" element={<ProtectedRoute><DebatePage /></ProtectedRoute>} />
         <Route path="/debates" element={<DebateList />} />
         <Route path="/debate/edit/:debateId" element={<EditDebate />} />
-        <Route path="/debates/:id" element={<DebateDetail />} />
+        <Route path="/debate-session/:id" element={<DebateSession />} />
         <Route path="/moderation" element={<ProtectedRoute><ModerationPage /></ProtectedRoute>} />
         <Route path="/archive" element={<ProtectedRoute><ArchivePage /></ProtectedRoute>} />
         <Route path="/contact" element={<ContactPage />} />

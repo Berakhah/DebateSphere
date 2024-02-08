@@ -126,6 +126,24 @@ const debateController = {
         }
     },
     
+    async fetchDebateDetail(req, res) {
+        const debateId = req.params.debateId;
+        console.log("Fetching details for debate with ID:", debateId);
+    
+        try {
+            const debate = await db.Debate.findByPk(debateId);
+            if (!debate) {
+                return res.status(404).json({ message: "Debate not found." });
+            }
+    
+            res.json(debate);
+        } catch (error) {
+            console.error("Error fetching debate detail:", error);
+            res.status(500).json({ message: "Error fetching debate detail.", error: error.message });
+        }
+    },
+    
+
     async getArchivedDebates(req, res) {
         const { page = 1, limit = 10 } = req.query;
         try {

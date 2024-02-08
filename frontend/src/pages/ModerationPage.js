@@ -1,14 +1,11 @@
 import React from 'react';
-import Navbar from '../components/layout/Navbar';
-import Footer from '../components/layout/Footer';
 import ModerationPanel from '../components/moderation/ModerationPanel'; 
-import './ModerationPage.css';
 
 const ModerationPage = () => {
   return (
-    <div>
-      <main className="moderation-page-content">
-        <h1>Moderation Dashboard</h1>
+    <div className="flex flex-col min-h-screen">
+      <main className="flex-grow container mx-auto px-4 py-8">
+        <h1 className="text-3xl font-bold text-center mb-8">Moderation Dashboard</h1>
         <ModerationPanel />
       </main>
     </div>

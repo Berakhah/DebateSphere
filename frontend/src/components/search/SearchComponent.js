@@ -1,31 +1,25 @@
 import React, { useState } from 'react';
 import { searchDebates } from '../../api/api'; 
-import './SearchComponent.css';
 
 const SearchComponent = () => {
-  const [searchParams, setSearchParams] = useState({
-    keyword: '',
-    category: '',
-    date: ''
-  });
+  const [searchParams, setSearchParams] = useState({ keyword: '', category: '', date: '' });
   const [searchResults, setSearchResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState('');
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    setSearchParams(prevParams => ({ ...prevParams, [name]: value }));
+    setSearchParams({ ...searchParams, [name]: value });
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setIsSearching(true);
-    setError(null);
+    setError('');
     try {
-      const data = await searchDebates(searchParams);
-      setSearchResults(data);
-    } catch (err) {
-      console.error("Error during search:", err);
+      const results = await searchDebates(searchParams);
+      setSearchResults(results);
+    } catch (error) {
       setError('Failed to perform search. Please try again.');
     } finally {
       setIsSearching(false);
@@ -33,10 +27,11 @@ const SearchComponent = () => {
   };
 
   return (
-    <section className="search-component-container">
-      <h2>Search Debates</h2>
-      <form onSubmit={handleSubmit} noValidate>
+    <div className="mt-8">
+      <h2 className="text-xl font-semibold mb-4">Search Debates</h2>
+      <form onSubmit={handleSubmit} className="mb-4 flex gap-2">
         <input
+          className="border border-gray-300 p-2 rounded"
           type="text"
           name="keyword"
           placeholder="Keyword"
@@ -44,6 +39,7 @@ const SearchComponent = () => {
           onChange={handleInputChange}
         />
         <input
+          className="border border-gray-300 p-2 rounded"
           type="text"
           name="category"
           placeholder="Category"
@@ -51,29 +47,32 @@ const SearchComponent = () => {
           onChange={handleInputChange}
         />
         <input
+          className="border border-gray-300 p-2 rounded"
           type="date"
           name="date"
-          placeholder="Date"
           value={searchParams.date}
           onChange={handleInputChange}
         />
-        <button type="submit" disabled={isSearching}>Search</button>
+        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="submit" disabled={isSearching}>
+          Search
+        </button>
       </form>
-      {isSearching ? <p>Searching...</p> : error ? <p className="error">{error}</p> : (
-        <ul>
-          {searchResults.length > 0 ? (
-            searchResults.map((debate) => (
-              <li key={debate.id}>
-                <h3>{debate.title}</h3>
-                <p>Date and Time: {debate.dateTime}</p>
-                <p>Status: {debate.status}</p>
-                <p>Category: {debate.topicCategory}</p>
-              </li>
-            ))
-          ) : <p>No results found.</p>}
+      {isSearching && <p className="text-center">Searching...</p>}
+      {error && <p className="text-red-500">{error}</p>}
+      {!isSearching && searchResults.length > 0 && (
+        <ul className="space-y-4">
+          {searchResults.map((debate) => (
+            <li key={debate.id} className="border p-4 rounded shadow">
+              <h3 className="font-semibold">{debate.title}</h3>
+              <p>Date and Time: {debate.dateTime}</p>
+              <p>Status: {debate.status}</p>
+              <p>Category: {debate.topicCategory}</p>
+            </li>
+          ))}
         </ul>
       )}
-    </section>
+      {!isSearching && searchResults.length === 0 && !error && <p>No results found.</p>}
+    </div>
   );
 };
 
