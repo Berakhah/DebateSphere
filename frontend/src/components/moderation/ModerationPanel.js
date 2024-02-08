@@ -6,12 +6,14 @@ const ModerationPanel = () => {
   const [users, setUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize] = useState(10); // Number of debates per page
 
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const debates = await fetchDebates();
+        const debates = await fetchDebates(currentPage, pageSize);
         const debatesWithArgs = await Promise.all(
           debates.map(async (debate) => {
             const argumentsForDebate = await listArgumentsForDebate(debate.debateId);
@@ -30,14 +32,23 @@ const ModerationPanel = () => {
     };
 
     fetchData();
-  }, []);
+  }, [currentPage, pageSize]);
 
+  // Pagination handlers
+  const handleNextPage = () => {
+    setCurrentPage(currentPage + 1);
+  };
+
+  const handlePrevPage = () => {
+    setCurrentPage(currentPage - 1);
+  };
+
+  // Function to handle deleting an argument
   const handleDeleteArgument = async (debateId, argumentId) => {
-    const confirmation = window.confirm("Are you sure you want to delete this argument?");
-    if (!confirmation) return;
-
-    setIsLoading(true);
     try {
+      if (!debateId || !argumentId) {
+        throw new Error("Debate ID or Argument ID is missing");
+      }
       await deleteContent('argument', argumentId);
       const updatedDebates = debatesWithArguments.map((debate) => {
         if (debate.debateId === debateId) {
@@ -48,16 +59,15 @@ const ModerationPanel = () => {
       setDebatesWithArguments(updatedDebates);
     } catch (error) {
       setError("Failed to delete argument: " + error.message);
-    } finally {
-      setIsLoading(false);
     }
   };
 
+  // Function to handle suspending a user
   const handleSuspendUser = async (userId, username) => {
-    const confirmation = window.confirm(`Are you sure you want to suspend user ${username}?`);
-    if (!confirmation) return;
-
     try {
+      if (!userId) {
+        throw new Error("User ID is missing");
+      }
       await suspendUser(userId);
       const updatedUsers = users.map(user => {
         if (user.id === userId) {
@@ -71,11 +81,12 @@ const ModerationPanel = () => {
     }
   };
 
+  // Function to handle banning a user
   const handleBanUser = async (userId, username) => {
-    const confirmation = window.confirm(`Are you sure you want to ban user ${username}?`);
-    if (!confirmation) return;
-
     try {
+      if (!userId) {
+        throw new Error("User ID is missing");
+      }
       await banUser(userId);
       const updatedUsers = users.map(user => {
         if (user.id === userId) {
@@ -89,11 +100,12 @@ const ModerationPanel = () => {
     }
   };
 
+  // Function to handle warning a user
   const handleWarnUser = async (userId, username) => {
-    const confirmation = window.confirm(`Are you sure you want to warn user ${username}?`);
-    if (!confirmation) return;
-
     try {
+      if (!userId) {
+        throw new Error("User ID is missing");
+      }
       await warnUser(userId);
       const updatedUsers = users.map(user => {
         if (user.id === userId) {
@@ -133,8 +145,24 @@ const ModerationPanel = () => {
             </div>
           ))}
         </div>
+        <div className="flex justify-center mt-4">
+          <button
+            onClick={handlePrevPage}
+            disabled={currentPage === 1}
+            className="mr-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
+          >
+            Previous Page
+          </button>
+          <button
+            onClick={handleNextPage}
+            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
+          >
+            Next Page
+          </button>
+        </div>
       </div>
 
+      {/* User Moderation Section */}
       <div>
         <h2 className="text-2xl font-bold mb-4">User Moderation</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">

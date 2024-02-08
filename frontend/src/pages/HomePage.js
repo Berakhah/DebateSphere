@@ -20,29 +20,7 @@ const HomePage = () => {
           <p>Our platform empowers individuals to express their opinions, learn from diverse perspectives, and participate in vibrant debates on current issues.</p>
         </section>
 
-        <section className="mt-12">
-          <h2 className="text-3xl font-semibold mb-4">Explore Topics</h2>
-          <div className="flex justify-center space-x-4">
-            {/* Example placeholders for images/GIFs/videos */}
-            <div className="rounded overflow-hidden shadow-lg">
-              <img src="/path/to/image.jpg" alt="Topic 1" className="w-full" />
-              <div className="px-6 py-4">
-                <div className="font-bold text-xl mb-2">Topic 1</div>
-                <p className="text-gray-700 text-base">Discover debates and insights on Topic 1.</p>
-              </div>
-            </div>
-            <div className="rounded overflow-hidden shadow-lg">
-              <video autoPlay loop muted className="w-full">
-                <source src="/path/to/video.mp4" type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
-              <div className="px-6 py-4">
-                <div className="font-bold text-xl mb-2">Topic 2</div>
-                <p className="text-gray-700 text-base">Engage with the community on Topic 2.</p>
-              </div>
-            </div>
-          </div>
-        </section>
+
       </main>
     </div>
   );

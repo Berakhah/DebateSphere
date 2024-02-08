@@ -5,7 +5,9 @@ const commentController = require('../controllers/commentController');
 
 const router = express.Router();
 
-router.post('/debates/:debateId/comments', authenticate, [
+router.post('/debates/:debateId/comments', 
+// authenticate,
+ [
     body('content').trim().isLength({ min: 1 }).withMessage('Comment content cannot be empty'),
 
 ], (req, res) => {

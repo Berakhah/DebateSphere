@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { reportContent } from '../../api/api'; 
-import './ReportForm.css'; 
+import { reportContent } from '../../api/api';
 
 const ReportForm = ({ contentId }) => {
   const [reportDetails, setReportDetails] = useState({
@@ -19,23 +18,19 @@ const ReportForm = ({ contentId }) => {
 
   const validateForm = () => {
     let tempErrors = {};
-    tempErrors.reason = reportDetails.reason ? "" : "Reason for reporting is required.";
-    tempErrors.details = reportDetails.details ? "" : "Detailed explanation is required.";
+    tempErrors.reason = reportDetails.reason ? '' : 'Reason for reporting is required.';
+    tempErrors.details = reportDetails.details ? '' : 'Detailed explanation is required.';
     setErrors(tempErrors);
-    return Object.values(tempErrors).every(x => x === "");
+    return Object.values(tempErrors).every((x) => x === '');
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (!validateForm()) {
-      console.log("Report is invalid!");
-      return; 
-    }
+    if (!validateForm()) return;
 
     setIsSubmitting(true);
     try {
       await reportContent(reportDetails);
-      console.log("Report submitted successfully.");
       setSubmitSuccess(true);
     } catch (error) {
       console.error('Reporting content error:', error);
@@ -45,42 +40,54 @@ const ReportForm = ({ contentId }) => {
     }
   };
 
-
   return (
-    <section className="report-form-container">
-      {submitSuccess && <p className="success">Report submitted successfully!</p>}
+    <section className="report-form-container bg-white p-6 rounded-lg shadow-md">
+      {submitSuccess && <p className="text-green-500">Report submitted successfully!</p>}
       <form onSubmit={handleSubmit} noValidate>
-        {/* Reason for reporting dropdown */}
-        <div className="form-group">
-          <label htmlFor="reason">Reason for Reporting</label>
+        <div className="form-group mb-4">
+          <label htmlFor="reason" className="block text-sm font-medium text-gray-700">
+            Reason for Reporting
+          </label>
           <select
             id="reason"
             name="reason"
             value={reportDetails.reason}
             onChange={handleInputChange}
-            className={errors.reason ? "error-input" : ""}
+            className={`mt-1 block w-full p-2 border ${
+              errors.reason ? 'border-red-500' : 'border-gray-300'
+            } rounded-md`}
           >
             <option value="">Select a reason</option>
-            {/* Add more reasons as options here */}
+            <option value="Harassment">Harassment</option>
+            <option value="Spam">Spam</option>
+            <option value="Inappropriate Content">Inappropriate Content</option>
+            <option value="Other">Other</option>
           </select>
-          {errors.reason && <p className="error">{errors.reason}</p>}
+          {errors.reason && <p className="text-red-500 text-sm">{errors.reason}</p>}
         </div>
-        {/* Detailed explanation textarea */}
-        <div className="form-group">
-          <label htmlFor="details">Details</label>
+        <div className="form-group mb-4">
+          <label htmlFor="details" className="block text-sm font-medium text-gray-700">
+            Details
+          </label>
           <textarea
             id="details"
             name="details"
             value={reportDetails.details}
             onChange={handleInputChange}
-            className={errors.details ? "error-input" : ""}
+            className={`mt-1 block w-full p-2 border ${
+              errors.details ? 'border-red-500' : 'border-gray-300'
+            } rounded-md`}
           ></textarea>
-          {errors.details && <p className="error">{errors.details}</p>}
+          {errors.details && <p className="text-red-500 text-sm">{errors.details}</p>}
         </div>
-        <button type="submit" disabled={isSubmitting}>
+        <button
+          type="submit"
+          className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
+          disabled={isSubmitting}
+        >
           {isSubmitting ? 'Submitting...' : 'Submit Report'}
         </button>
-        {errors.api && <p className="error">{errors.api}</p>}
+        {errors.api && <p className="text-red-500 text-sm mt-2">{errors.api}</p>}
       </form>
     </section>
   );

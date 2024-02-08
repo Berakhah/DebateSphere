@@ -11,8 +11,8 @@ const DebatesPage = () => {
     switch (subPage) {
       case 'create': return <CreateDebate />;
       case 'list': return <DebateList />;
-      case 'edit': return <EditDebate />;
-      case 'search': return <SearchComponent />;
+      // case 'edit': return <EditDebate />;
+      // case 'search': return <SearchComponent />;
       default: return <p className="text-center text-lg mt-4">Select an option to proceed.</p>;
     }
   };
@@ -34,7 +34,7 @@ const DebatesPage = () => {
           >
             Debate List
           </button>
-          <button 
+          {/* <button 
             onClick={() => setSubPage('edit')}
             className="bg-yellow-500 text-white font-bold py-2 px-4 rounded hover:bg-yellow-700 transition duration-300"
           >
@@ -45,7 +45,7 @@ const DebatesPage = () => {
             className="bg-indigo-500 text-white font-bold py-2 px-4 rounded hover:bg-indigo-700 transition duration-300"
           >
             Search Debates
-          </button>
+          </button> */}
         </div>
       </div>
       <main className="debate-page-content mt-8">

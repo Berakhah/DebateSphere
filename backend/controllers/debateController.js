@@ -142,6 +142,18 @@ const debateController = {
             res.status(500).json({ message: "Error fetching debate detail.", error: error.message });
         }
     },
+    async fetchAllDebates(req, res) {
+        try {
+            const debates = await db.Debate.findAll({
+                order: [['dateTime', 'DESC']] // Assuming you want the latest debates first
+            });
+    
+            res.status(200).json(debates);
+        } catch (error) {
+            console.error("Error fetching all debates:", error);
+            res.status(500).json({ message: "Error fetching all debates.", error: error.message });
+        }
+    },
     
 
     async getArchivedDebates(req, res) {

@@ -25,9 +25,10 @@ const SubmitArgument = ({ debateId }) => {
     setIsSubmitting(true);
     try {
       const response = await postArgument(debateId, { content: argument });
-      if (response.success) {
+      if (response && response.success) {
         setSuccessMessage('Argument submitted successfully.');
         setArgument(''); // Clear the input field on successful submission
+        setErrorMessage('');
       } else {
         setErrorMessage('Failed to submit the argument.');
       }

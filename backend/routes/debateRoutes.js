@@ -35,6 +35,6 @@ router.get('/search', debateController.searchDebates);
 router.get('/archived', debateController.getArchivedDebates);
 
 router.get('/debates/:debateId', debateController.fetchDebateDetail);
-
+router.get('/debates', debateController.fetchAllDebates);
 
 module.exports = router;

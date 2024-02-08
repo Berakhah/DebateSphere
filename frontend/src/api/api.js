@@ -290,7 +290,7 @@ export const revokeVote = async (debateId, argumentId) => {
 
 export const postComment = async (debateId, commentData) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/debates/${debateId}/comments`, {
+      const response = await fetch(`${API_BASE_URL}/api/${debateId}/comments`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -305,50 +305,66 @@ export const postComment = async (debateId, commentData) => {
 
 
 
-export const deleteContent = async (contentType, contentId) => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/api/moderation/content/${contentType}/${contentId}`, {
-      method: 'DELETE'
-    });
-    return await response.json();
-  } catch (error) {
-    console.error('Deleting content error:', error);
-  }
-};
-
-export const suspendUser = async (userId) => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/api/moderation/user/${userId}/suspend`, {
-      method: 'PATCH'
-    });
-    return await response.json();
-  } catch (error) {
-    console.error('Suspending user error:', error);
-  }
-};
-
-export const banUser = async (userId) => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/api/moderation/user/${userId}/ban`, {
-      method: 'PATCH'
-    });
-    return await response.json();
-  } catch (error) {
-    console.error('Banning user error:', error);
-  }
-};
-
-export const warnUser = async (userId) => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/api/moderation/user/${userId}/warn`, {
-      method: 'PATCH'
-    });
-    return await response.json();
-  } catch (error) {
-    console.error('Warning user error:', error);
-  }
-};
-
+  export const deleteContent = async (contentType, contentId) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/content/${contentType}/${contentId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        }
+      });
+      return await response.json();
+    } catch (error) {
+      console.error('Deleting content error:', error);
+    }
+  };
+  
+  export const suspendUser = async (userId) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/user/${userId}/suspend`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        }
+      });
+      return await response.json();
+    } catch (error) {
+      console.error('Suspending user error:', error);
+    }
+  };
+  
+  export const banUser = async (userId) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/user/${userId}/ban`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        }
+      });
+      return await response.json();
+    } catch (error) {
+      console.error('Banning user error:', error);
+    }
+  };
+  
+  export const warnUser = async (userId) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/user/${userId}/warn`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        }
+      });
+      return await response.json();
+    } catch (error) {
+      console.error('Warning user error:', error);
+    }
+  };
+  
 export const reportContent = async (reportData) => {
   try {
     const response = await fetch(`${API_BASE_URL}/api/reports/debate`, {
@@ -389,7 +405,7 @@ export const fetchReports = async () => {
 
 export const postArgument = async (debateId, argumentData) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/debate/${debateId}/arguments`, {
+    const response = await fetch(`${API_BASE_URL}/api/debates/${debateId}/arguments`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -462,5 +478,18 @@ export const fetchDebateDetail = async (debateId) => {
   } catch (error) {
     console.error('Fetching debate detail error:', error);
     throw error; // Consider handling this error more gracefully in your UI
+  }
+};
+
+export const fetchAllDebates = async () => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/debates?withIds=true`);
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching all debates:', error);
+    throw error;
   }
 };

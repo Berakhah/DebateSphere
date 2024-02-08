@@ -15,11 +15,11 @@ const Navbar = () => {
            */}
           {/* <li><Link to="/archive" className="hover:text-blue-200">Archive</Link></li> */}
           <li><Link to="/contact" className="hover:text-blue-200">Contact</Link></li>
-          {!isAuthenticated ? (
+          {/* {!isAuthenticated ? (
             <li><Link to="/auth/login" className="bg-transparent py-2 px-4 border border-white rounded hover:bg-blue-700">Login</Link></li>
           ) : (
             <li><button onClick={() => {localStorage.removeItem('token'); window.location.href = '/';}} className="bg-red-500 py-2 px-4 border border-white rounded hover:bg-red-700">Logout</button></li>
-          )}
+          )} */}
         </ul>
       </nav>
     </header>

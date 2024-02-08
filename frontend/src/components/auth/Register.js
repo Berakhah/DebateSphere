@@ -42,7 +42,7 @@ const Register = () => {
         if (result.success) {
           console.log("Registration successful", result.data);
           // Redirect user to login page or show success message
-          navigate('/login');
+          navigate('/auth/login');
         } else {
           // Handle registration errors, e.g., user already exists
           console.error("Registration failed:", result.message);

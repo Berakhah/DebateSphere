@@ -53,7 +53,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api', debateRoutes);
 app.use('/api', voteRoutes);
 app.use('/api', commentRoutes); 
-app.use('/api/moderation', moderationRoutes);
+app.use('/api', moderationRoutes);
 app.use('/api', argumentRoutes); 
 app.use('/api/reports', reportRoutes); 
 
