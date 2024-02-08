@@ -108,6 +108,18 @@ const moderationController = {
             res.status(500).json({ message: `Error deleting ${contentType}.`, error: error.toString() });
         }
     },
+    listUsers: async (req, res) => {
+        try {
+            const users = await User.findAll({
+                attributes: { exclude: ['password'] } // Exclude password from the result
+            });
+    
+            res.json(users);
+        } catch (error) {
+            console.error('Error listing users:', error);
+            res.status(500).json({ message: 'Error listing users.', error: error.toString() });
+        }
+    },
 };
 
 module.exports = moderationController;

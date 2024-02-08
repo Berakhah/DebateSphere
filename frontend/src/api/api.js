@@ -133,6 +133,27 @@ export const fetchDebates = async () => {
   };
   
 
+  export const fetchUsers = async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/moderation/users`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`, // Assuming you store the auth token in localStorage
+        },
+      });
+  
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+  
+      return await response.json();
+    } catch (error) {
+      console.error('Fetching users error:', error);
+      throw error;
+    }
+  };
+
 export const createDebate = async (debateData) => {
   try {
     const response = await fetch(`${API_BASE_URL}/api/create`, {
@@ -195,7 +216,7 @@ export const updateDebate = async (debateId, debateData) => {
 
 export const deleteDebate = async (debateId) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/debates/delete/${debateId}`, {
+    const response = await fetch(`${API_BASE_URL}/api/delete/${debateId}`, {
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -426,7 +447,7 @@ export const getRecommendedDebates = async () => {
 export const fetchDebateDetail = async (debateId) => {
   try {
     // Adjusted the URL to include the '/api' prefix before '/debates'
-    const response = await fetch(`${API_BASE_URL}/debates/${debateId}`, {
+    const response = await fetch(`${API_BASE_URL}/api/debates/${debateId}`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('token')}`, // Ensure this token is being set correctly elsewhere in your application

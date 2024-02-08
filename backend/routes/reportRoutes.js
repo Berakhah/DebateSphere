@@ -8,7 +8,9 @@ const router = express.Router();
 
 router.post(
     '/',
-    [authenticate, ...validateReportSubmission],
+    [
+        authenticate,
+         ...validateReportSubmission],
     reportController.createReport.bind(reportController) 
 );
 

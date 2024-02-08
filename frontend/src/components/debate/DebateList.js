@@ -1,4 +1,3 @@
-// DebateList.js
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { fetchDebates } from '../../api/api';
@@ -36,7 +35,10 @@ const DebateList = () => {
             <div key={debate.id} className="border rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out bg-white">
               <h3 className="text-xl font-semibold mb-4">{debate.title}</h3>
               <p className="text-gray-600 mb-4">{debate.description.slice(0, 100)}...</p>
-              <Link to={`/debate/edit/${debate.id}`} className="inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors duration-150">Edit</Link>
+              <div className="flex justify-between">
+                <Link to={`/debate-session/${debate.id}`} className="inline-block bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition-colors duration-150">View</Link>
+                <Link to={`/debate/edit/${debate.id}`} className="inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors duration-150">Edit</Link>
+              </div>
             </div>
           ))}
         </div>

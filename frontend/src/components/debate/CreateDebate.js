@@ -37,8 +37,8 @@ const CreateDebate = () => {
 
     setIsSubmitting(true);
     try {
-      await createDebate(debateDetails);
-      navigate('/debates'); // Adjust this path as necessary
+      const newDebate = await createDebate(debateDetails);
+      navigate(`/debate-session/${newDebate.id}`); // Navigate to the DebateSession page with the newly created debate ID
     } catch (error) {
       console.error("Error creating debate:", error);
       setErrors({ api: error.message || "An error occurred. Please try again later." });

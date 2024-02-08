@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import SubmitArgument from './SubmitArgument'; // Adjust the path as needed
-import VoteComponent from './VoteComponent'; // Adjust the path as needed
-import { fetchDebateDetail, listArgumentsForDebate } from '../../api/api'; // Adjust the import path as needed
+import SubmitArgument from './SubmitArgument';
+import VoteComponent from './VoteComponent';
+import { fetchDebateDetail, listArgumentsForDebate, postComment } from '../../api/api';
 
 const DebateSession = () => {
   const [debate, setDebate] = useState(null);
@@ -13,9 +13,9 @@ const DebateSession = () => {
 
   useEffect(() => {
     const fetchSessionDetails = async () => {
-      console.log("Debate ID:", debateId); // Debug log
       if (!debateId) {
         console.error("Debate ID is undefined.");
+        navigate('/'); // Redirect to a safe page or error page
         return;
       }
       try {
@@ -29,7 +29,18 @@ const DebateSession = () => {
       }
     };
     fetchSessionDetails();
-  }, [debateId]);
+  }, [debateId, navigate]);
+
+  const handleCommentSubmit = async (content) => {
+    try {
+      await postComment(debateId, { content });
+      // Refresh comments after posting
+      const args = await listArgumentsForDebate(debateId);
+      setArgumentsList(args);
+    } catch (error) {
+      console.error('Failed to post comment:', error);
+    }
+  };
 
   if (error) {
     return <div className="text-red-500">{error}</div>;
@@ -49,6 +60,10 @@ const DebateSession = () => {
             <div key={argument.id} className="border-b border-gray-200 py-4">
               <p className="mb-2">{argument.content}</p>
               <VoteComponent debateId={debateId} argumentId={argument.id} />
+              {/* Add comment section here */}
+              <div className="mt-4">
+                <CommentSection argumentId={argument.id} onCommentSubmit={handleCommentSubmit} />
+              </div>
             </div>
           ))
         ) : (
@@ -56,6 +71,33 @@ const DebateSession = () => {
         )}
       </div>
     </div>
+  );
+};
+
+// Component for Comment Section
+const CommentSection = ({ argumentId, onCommentSubmit }) => {
+  const [commentContent, setCommentContent] = useState('');
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!commentContent.trim()) return;
+    onCommentSubmit(commentContent);
+    setCommentContent('');
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="flex mt-2">
+      <input
+        type="text"
+        placeholder="Write a comment..."
+        value={commentContent}
+        onChange={(e) => setCommentContent(e.target.value)}
+        className="flex-1 rounded-l border border-gray-300 px-4 py-2 focus:outline-none focus:border-blue-500"
+      />
+      <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-r hover:bg-blue-600 focus:outline-none">
+        Post
+      </button>
+    </form>
   );
 };
 
