@@ -6,9 +6,7 @@ import './ContactPage.css'; // Make sure to create a ContactPage.css file for st
 const ContactPage = () => {
   return (
     <div>
-      <Navbar />
-      {/* Content of the contact page */}
-      <Footer />
+
     </div>
   );
 };

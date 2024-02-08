@@ -29,7 +29,7 @@ const Login = () => {
       try {
         const data = await loginUser({ email, password });
         console.log("Login successful!", data);
-        navigate('/HomePage'); // Use the correct path, considering case sensitivity and routing setup
+        navigate('/dashboard'); // Use the correct path, considering case sensitivity and routing setup
       } catch (error) {
         console.error("Login failed:", error);
         setErrors(prevErrors => ({ ...prevErrors, api: error.message || 'Login failed' }));

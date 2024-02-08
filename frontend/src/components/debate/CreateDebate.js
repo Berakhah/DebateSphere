@@ -7,10 +7,9 @@ const CreateDebate = () => {
   const [debateDetails, setDebateDetails] = useState({
     title: '',
     description: '',
-    category: '',
+    topicCategory: '', // Renamed from category to match backend requirement
     date: '',
-    time: '',
-    visibility: 'public'
+    time: ''
   });
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -25,10 +24,9 @@ const CreateDebate = () => {
     let tempErrors = {};
     tempErrors.title = debateDetails.title ? "" : "Title is required.";
     tempErrors.description = debateDetails.description ? "" : "Description is required.";
-    tempErrors.category = debateDetails.category ? "" : "Category is required.";
+    tempErrors.topicCategory = debateDetails.topicCategory ? "" : "Topic category is required.";
     tempErrors.date = debateDetails.date ? "" : "Date is required.";
     tempErrors.time = debateDetails.time ? "" : "Time is required.";
-    tempErrors.visibility = ['public', 'private'].includes(debateDetails.visibility) ? "" : "Visibility must be either 'public' or 'private'.";
     setErrors({ ...tempErrors });
     return Object.values(tempErrors).every(x => x === "");
   };
@@ -39,9 +37,17 @@ const CreateDebate = () => {
       console.log("Debate form is invalid!");
       return;
     }
+    
+    const submissionData = {
+      ...debateDetails,
+      dateTime: `${debateDetails.date}T${debateDetails.time}` // Combine date and time into a dateTime field
+    };
+    delete submissionData.date; // Remove the separate date
+    delete submissionData.time; // Remove the separate time
+
     setIsSubmitting(true);
     try {
-      await createDebate(debateDetails);
+      await createDebate(submissionData);
       navigate('/debates'); // Adjust the navigation path as necessary
     } catch (error) {
       console.error("Error creating debate:", error);
@@ -55,11 +61,24 @@ const CreateDebate = () => {
     <section className="create-debate-container">
       <h2>Create Debate</h2>
       <form onSubmit={handleSubmit} noValidate>
-        {/* Dynamic form generation based on debateDetails state */}
         {Object.entries(debateDetails).map(([key, value]) => (
-          key !== 'visibility' ? (
-            <div key={key} className="form-group">
-              <label htmlFor={key}>{key.charAt(0).toUpperCase() + key.slice(1)}</label>
+          <div key={key} className="form-group">
+            <label htmlFor={key}>{key.charAt(0).toUpperCase() + key.slice(1).replace('topicCategory', 'Topic Category')}</label>
+            {key === 'topicCategory' ? (
+              <select
+                id={key}
+                name={key}
+                value={value}
+                onChange={handleInputChange}
+                className={errors[key] ? "error-input" : ""}
+              >
+                {/* Example categories, replace or populate with actual ones */}
+                <option value="">Select a category</option>
+                <option value="politics">Politics</option>
+                <option value="science">Science</option>
+                <option value="technology">Technology</option>
+              </select>
+            ) : (
               <input
                 type={key === 'date' || key === 'time' ? key : 'text'}
                 id={key}
@@ -68,24 +87,9 @@ const CreateDebate = () => {
                 onChange={handleInputChange}
                 className={errors[key] ? "error-input" : ""}
               />
-              {errors[key] && <p className="error">{errors[key]}</p>}
-            </div>
-          ) : (
-            <div key={key} className="form-group">
-              <label htmlFor={key}>{key.charAt(0).toUpperCase() + key.slice(1)}</label>
-              <select
-                id={key}
-                name={key}
-                value={value}
-                onChange={handleInputChange}
-                className={errors[key] ? "error-input" : ""}
-              >
-                <option value="public">Public</option>
-                <option value="private">Private</option>
-              </select>
-              {errors[key] && <p className="error">{errors[key]}</p>}
-            </div>
-          )
+            )}
+            {errors[key] && <p className="error">{errors[key]}</p>}
+          </div>
         ))}
         <button type="submit" disabled={isSubmitting}>
           {isSubmitting ? 'Creating...' : 'Create Debate'}

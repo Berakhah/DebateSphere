@@ -7,12 +7,10 @@ import './ArchivePage.css';
 const ArchivePage = () => {
   return (
     <div>
-      <Navbar />
       <main className="archive-page-content">
         <h1>Archived Debates</h1>
         <ArchiveList />
       </main>
-      <Footer />
     </div>
   );
 };

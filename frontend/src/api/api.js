@@ -63,19 +63,24 @@ export const verifyEmail = async (token) => {
 };
 
 
-  export const fetchDebates = async () => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/api/debates/search`, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
-      return response.data;
-    } catch (error) {
-      console.error('Error fetching debates:', error);
-      throw error; 
+export const fetchDebates = async () => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/debates/search`, {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+      },
+    });
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
     }
-  };
+    const data = await response.json(); // Parse the JSON from the response
+    return data; // Assuming this is an array of debates
+  } catch (error) {
+    console.error('Error fetching debates:', error);
+    throw error; 
+  }
+};
+
 
   export const requestPasswordReset = async (email) => {
     try {

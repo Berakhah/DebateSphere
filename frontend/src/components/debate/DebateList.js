@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { fetchDebates } from '../../api/api'; 
-import './DebateList.css';
+import { fetchDebates } from '../../api/api';
 
 const DebateList = () => {
   const [debates, setDebates] = useState([]);
@@ -25,25 +24,24 @@ const DebateList = () => {
   }, []);
 
   return (
-    <div className="debate-list">
-      <h2>Debates</h2>
+    <div className="debate-list mt-4">
+      <h2 className="text-2xl font-bold text-center mb-6">Debates</h2>
       {isLoading ? (
-        <div>Loading debates...</div>
+        <div className="text-center">Loading debates...</div>
       ) : error ? (
-        <div>Error: {error}</div>
+        <div className="text-red-500 text-center">{error}</div>
       ) : (
-        <ul>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {debates.map((debate) => (
-            <li key={debate.id} className="debate-item">
-              <div className="debate-content">
-                <h3>{debate.title}</h3>
-                <p>{debate.description}</p>
-                <small>Scheduled for: {debate.date} at {debate.time}</small>
+            <div key={debate.id} className="debate-item border rounded-lg p-4 shadow hover:shadow-lg transition-shadow duration-200">
+              <h3 className="text-lg font-semibold">{debate.title}</h3>
+              <div className="flex justify-between items-center mt-4">
+                <Link to={`/debate/${debate.id}`} className="text-blue-500 hover:text-blue-600 transition-colors duration-150">View Details</Link>
+                <Link to={`/debate/edit/${debate.id}`} className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition-colors duration-150">Edit</Link>
               </div>
-              <Link to={`/debate/${debate.id}`} className="view-details">View Details</Link>
-            </li>
+            </div>
           ))}
-        </ul>
+        </div>
       )}
     </div>
   );

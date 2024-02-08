@@ -1,67 +1,49 @@
-import React, { useEffect, useState } from 'react';
-import Navbar from '../components/layout/Navbar';
-import Footer from '../components/layout/Footer';
-import { fetchDebates } from '../api/api';
-import './HomePage.css'; 
+import React from 'react';
+import { Link } from 'react-router-dom';
+import './HomePage.css'; // Ensure you have Tailwind CSS integrated
 
 const HomePage = () => {
-  const [debates, setDebates] = useState([]);
-
-  useEffect(() => {
-    const loadDebates = async () => {
-      const debatesData = await fetchDebates();
-      setDebates(debatesData);
-    };
-
-    loadDebates();
-  }, []);
-
   return (
     <div className="homepage-container">
-      {/* <Navbar /> */}
-      <main className="homepage-content">
-        <section className="user-onboarding">
-          <h2>User Onboarding and Management</h2>
-          <p>Join our community of educators and students for a streamlined onboarding experience. Enjoy role-based access to diverse resources and tools.</p>
+      <main className="flex flex-col items-center justify-center min-h-screen bg-blue-500 text-white p-4">
+        <section className="text-center">
+          <h1 className="text-5xl font-bold mb-4">Welcome to the Debate Platform</h1>
+          <p className="mb-8">A place to share your views and engage in meaningful discussions.</p>
+          <div>
+            <Link to="/auth/login" className="bg-white text-blue-500 px-4 py-2 rounded hover:bg-blue-100 transition duration-200 ease-in-out mr-2">Sign In</Link>
+            <Link to="/auth/register" className="text-white border border-white px-4 py-2 rounded hover:bg-white hover:text-blue-500 transition duration-200 ease-in-out">Register</Link>
+          </div>
         </section>
-        
-        <section className="debate-lifecycle">
-          <h2>Debate Lifecycle Management</h2>
-          <p>Engage in debates using our comprehensive tools for creating, editing, and scheduling. Stay updated with real-time notifications.</p>
+
+        <section className="mt-12 p-8 bg-white text-blue-500 rounded-lg shadow-lg">
+          <h2 className="text-3xl font-semibold mb-4">About Us</h2>
+          <p>Our platform empowers individuals to express their opinions, learn from diverse perspectives, and participate in vibrant debates on current issues.</p>
         </section>
-        
-        <section className="interactive-features">
-          <h2>Interactive Debate Features</h2>
-          <p>Participate in live debates, share digital evidence, and collaborate in real-time. Our platform supports both text and voice-based interactions.</p>
-        </section>
-        
-        <section className="content-moderation">
-          <h2>Comprehensive Content Moderation</h2>
-          <p>Experience a safe debating environment with our advanced moderation tools and automated content filtering algorithms.</p>
-        </section>
-        
-        <section className="search-archiving">
-          <h2>Rich Search Functionality and Archiving</h2>
-          <p>Discover debates and historical discussions effortlessly with our AI-powered search engine and organized archival system.</p>
-        </section>
-        
-        <section className="current-debates">
-          <h2>Current Debates</h2>
-          {debates && debates.length ? (
-            <ul className="debates-list">
-              {debates.map((debate) => (
-                <li key={debate.id} className="debate-item">
-                  <h3>{debate.title}</h3>
-                  <p>{debate.description}</p>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p>No debates available at the moment.</p>
-          )}
+
+        <section className="mt-12">
+          <h2 className="text-3xl font-semibold mb-4">Explore Topics</h2>
+          <div className="flex justify-center space-x-4">
+            {/* Example placeholders for images/GIFs/videos */}
+            <div className="rounded overflow-hidden shadow-lg">
+              <img src="/path/to/image.jpg" alt="Topic 1" className="w-full" />
+              <div className="px-6 py-4">
+                <div className="font-bold text-xl mb-2">Topic 1</div>
+                <p className="text-gray-700 text-base">Discover debates and insights on Topic 1.</p>
+              </div>
+            </div>
+            <div className="rounded overflow-hidden shadow-lg">
+              <video autoPlay loop muted className="w-full">
+                <source src="/path/to/video.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+              <div className="px-6 py-4">
+                <div className="font-bold text-xl mb-2">Topic 2</div>
+                <p className="text-gray-700 text-base">Engage with the community on Topic 2.</p>
+              </div>
+            </div>
+          </div>
         </section>
       </main>
-      {/* <Footer /> */}
     </div>
   );
 };

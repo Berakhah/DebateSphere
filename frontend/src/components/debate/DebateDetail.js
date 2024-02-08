@@ -1,20 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios'; // Make sure to install axios for making HTTP requests
-import { Link } from 'react-router-dom';
-import './DebateDetail.css'; // Make sure to create a DebateDetail.css file for styling
+import axios from 'axios';
+import { useParams, Link } from 'react-router-dom';
+import './DebateDetail.css'; // Make sure this file exists and contains your custom styles if needed
 
-const DebateDetail = ({ match }) => {
+const DebateDetail = () => {
   const [debate, setDebate] = useState(null);
-  const [error, setError] = useState(null);
-  const debateId = match.params.id; // Assuming you're using React Router and getting the debate ID from the URL
+  const [error, setError] = useState('');
+  const { id: debateId } = useParams();
 
   useEffect(() => {
     const fetchDebateDetail = async () => {
       try {
         const response = await axios.get(`http://localhost:3000/api/debates/${debateId}`, {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}` // Retrieve the token from local storage
-          }
+          headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
         });
         setDebate(response.data);
       } catch (err) {
@@ -27,21 +25,23 @@ const DebateDetail = ({ match }) => {
   }, [debateId]);
 
   if (error) {
-    return <p>Error: {error}</p>;
+    return <div className="text-red-500 text-center">{error}</div>;
   }
 
   if (!debate) {
-    return <p>Loading...</p>; 
+    return <div className="text-center">Loading...</div>;
   }
 
   return (
-    <section className="debate-detail-container">
-      <h2>{debate.title}</h2>
-      <p>{debate.description}</p>
-      <p>Scheduled for: {debate.date} at {debate.time}</p>
-      {/* Add options to participate or view arguments */}
-      <Link to={`/debate/${debateId}/participate`}>Participate</Link>
-      {/* More details and actions as needed */}
+    <section className="max-w-4xl mx-auto mt-10 p-5 bg-white rounded shadow">
+      <h2 className="text-2xl font-bold mb-3">{debate.title}</h2>
+      <p className="mb-2">{debate.description}</p>
+      <p className="text-sm text-gray-600">Scheduled for: {debate.dateTime}</p>
+      {/* Additional details and actions */}
+      <Link to={`/debate/participate/${debateId}`} className="inline-block mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+        Participate
+      </Link>
+      {/* Customize further as needed */}
     </section>
   );
 };
