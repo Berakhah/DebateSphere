@@ -307,7 +307,7 @@ export const postComment = async (debateId, commentData) => {
 
   export const deleteContent = async (contentType, contentId) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/content/${contentType}/${contentId}`, {
+      const response = await fetch(`${API_BASE_URL}/api/moderation/content/${contentType}/${contentId}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -408,8 +408,8 @@ export const postArgument = async (debateId, argumentData) => {
     const response = await fetch(`${API_BASE_URL}/api/debates/${debateId}/arguments`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        'Content-Type': 'application/json'
+        // 'Authorization': `Bearer ${localStorage.getItem('token')}`,
       },
       body: JSON.stringify(argumentData),
     });

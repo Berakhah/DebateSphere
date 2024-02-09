@@ -6,7 +6,7 @@ const { validationResult } = require('express-validator');
 
 const router = express.Router();
 
-// Middleware for validating the argument's content
+
 const validateArgument = [
   body('content')
     .trim()
@@ -15,12 +15,11 @@ const validateArgument = [
     .withMessage('Content is required.')
     .isLength({ min: 10 })
     .withMessage('Content must be at least 10 characters long.'),
-  // Add more validation rules here as needed
+
 ];
 
-// Post an argument to a specific debate
 router.post('/debates/:debateId/arguments', 
-  authenticate, 
+  // authenticate, 
   validateArgument,
   (req, res, next) => {
     const errors = validationResult(req);
@@ -31,10 +30,10 @@ router.post('/debates/:debateId/arguments',
   },
   argumentController.postArgument);
 
-// List all arguments for a specific debate
+
 router.get('/debates/:debateId/arguments', 
-  authenticate, // Optional: Remove if public access is allowed
+  authenticate, 
   argumentController.listArgumentsForDebate);
 
-// Export the router
+
 module.exports = router;
