@@ -290,7 +290,7 @@ export const revokeVote = async (debateId, argumentId) => {
 
 export const postComment = async (debateId, commentData) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/${debateId}/comments`, {
+      const response = await fetch(`${API_BASE_URL}/api/debates/${debateId}/comments`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -322,7 +322,8 @@ export const postComment = async (debateId, commentData) => {
   
   export const suspendUser = async (userId) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/user/${userId}/suspend`, {
+      console.log(`${API_BASE_URL}/api/moderation/user/${userId}/suspend`);
+      const response = await fetch(`${API_BASE_URL}/api/moderation/user/${userId}/suspend`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -367,7 +368,7 @@ export const postComment = async (debateId, commentData) => {
   
 export const reportContent = async (reportData) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/reports/debate`, {
+    const response = await fetch(`${API_BASE_URL}/api/debate`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -405,12 +406,15 @@ export const fetchReports = async () => {
 
 export const postArgument = async (debateId, argumentData) => {
   try {
+    console.log(JSON.stringify(argumentData))
+    console.log(`${API_BASE_URL}/api/debates/${debateId}/arguments`)
     const response = await fetch(`${API_BASE_URL}/api/debates/${debateId}/arguments`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
-        // 'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
       },
+      
       body: JSON.stringify(argumentData),
     });
 

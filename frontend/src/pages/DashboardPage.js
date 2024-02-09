@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import DebatesPage from './DebatePage';
 import ModerationPage from './ModerationPage';
 import DebateSession from '../components/debate/DebateSession';
 import ReportPage from '../components/moderation/ReportForm';
+import { FaBars, FaTimes } from 'react-icons/fa'; // Importing icons
 
 const DashboardPage = () => {
   const [activePage, setActivePage] = useState('');
   const [debateId, setDebateId] = useState('');
-  const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const handleDebateSessionClick = () => {
@@ -21,34 +20,40 @@ const DashboardPage = () => {
 
   return (
     <div className="flex min-h-screen bg-gray-100">
-      <aside className={`w-64 bg-gray-800 text-white p-4 space-y-4 transition-transform duration-300 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}>
-        <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="md:hidden">
-          {/* Icon or text to toggle sidebar visibility */}
-          {isSidebarOpen ? 'Close' : 'Menu'}
-        </button>
-        <nav>
-          <ul className="space-y-2">
-            <li className="cursor-pointer p-2 hover:bg-gray-700 rounded transition duration-150 ease-in-out" onClick={() => setActivePage('debates')}>
-              Debates
-            </li>
-            <li className="cursor-pointer p-2 hover:bg-gray-700 rounded transition duration-150 ease-in-out" onClick={() => setActivePage('moderation')}>
-              Moderation
-            </li>
-            <li className="cursor-pointer p-2 hover:bg-gray-700 rounded transition duration-150 ease-in-out" onClick={handleDebateSessionClick}>
-              Live Debates
-            </li>
-            <li className="cursor-pointer p-2 hover:bg-gray-700 rounded transition duration-150 ease-in-out" onClick={() => setActivePage('report')}>
-              Report
-            </li>
+      {/* Sidebar */}
+      <aside className={`bg-gray-800 text-white fixed inset-y-0 left-0 transform ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} w-64 transition duration-300 ease-in-out z-30 md:relative md:translate-x-0 md:inset-0`}>
+        <div className="flex items-center justify-between md:justify-center p-4">
+          <span className="text-lg font-semibold">Dashboard</span>
+          <button onClick={() => setIsSidebarOpen(false)} className="text-white md:hidden">
+            <FaTimes />
+          </button>
+        </div>
+        <nav className="mt-10">
+          <ul>
+            {/* Navigation Links */}
+            <li className="p-2 hover:bg-gray-700" onClick={() => { setActivePage('debates'); setIsSidebarOpen(false); }}>Debates</li>
+            <li className="p-2 hover:bg-gray-700" onClick={() => { setActivePage('moderation'); setIsSidebarOpen(false); }}>Moderation</li>
+            <li className="p-2 hover:bg-gray-700" onClick={() => { handleDebateSessionClick(); setIsSidebarOpen(false); }}>Live Debates</li>
+            <li className="p-2 hover:bg-gray-700" onClick={() => { setActivePage('report'); setIsSidebarOpen(false); }}>Report</li>
           </ul>
         </nav>
       </aside>
-      <main className="flex-1 flex flex-col">
-        <header className="p-4 bg-blue-500 text-white text-lg">Dashboard</header>
-        <div className="flex-grow p-8">
-          {activePage ? renderPage() : <p className="text-center text-lg">Select an option from the sidebar to get started.</p>}
+
+      {/* Main content */}
+      <div className={`flex-1 flex flex-col md:ml-64`}>
+        {/* Mobile menu button */}
+        <div className="bg-blue-500 text-white flex justify-between md:hidden">
+          <span className="block p-4 text-lg font-semibold">Dashboard</span>
+          <button onClick={() => setIsSidebarOpen(true)} className="p-4 focus:outline-none focus:bg-blue-600">
+            <FaBars />
+          </button>
         </div>
-      </main>
+
+        {/* Page content */}
+        <main className="flex-1 overflow-auto p-4">
+          {activePage ? renderPage() : <p>Select an option from the sidebar.</p>}
+        </main>
+      </div>
     </div>
   );
 
@@ -56,10 +61,9 @@ const DashboardPage = () => {
     switch (activePage) {
       case 'debates': return <DebatesPage />;
       case 'moderation': return <ModerationPage />;
-      case 'debate-session': 
-        return debateId ? <DebateSession debateId={debateId} /> : null;
+      case 'debate-session': return debateId ? <DebateSession debateId={debateId} /> : null;
       case 'report': return <ReportPage />;
-      default: return <p>Select an option from the sidebar.</p>;
+      default: return <p className="text-center">Select an option from the sidebar.</p>;
     }
   }
 };

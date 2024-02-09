@@ -19,7 +19,7 @@ const validateArgument = [
 ];
 
 router.post('/debates/:debateId/arguments', 
-  // authenticate, 
+  authenticate, 
   validateArgument,
   (req, res, next) => {
     const errors = validationResult(req);

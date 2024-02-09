@@ -55,7 +55,7 @@ app.use('/api', voteRoutes);
 app.use('/api/debates', commentRoutes); 
 app.use('/api/moderation', moderationRoutes);
 app.use('/api', argumentRoutes); 
-app.use('/api/reports', reportRoutes); 
+app.use('/api', reportRoutes); 
 
 
 app.get('/', (req, res) => res.send('Welcome to DebateSphere API!'));

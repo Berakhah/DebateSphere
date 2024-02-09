@@ -17,7 +17,7 @@ router.delete('/content/:contentType/:contentId',
  authenticate, 
  checkAdmin, moderationController.deleteContent);
 router.get('/users', 
-authenticate, 
+authenticate,
 moderationController.listUsers);
 
 module.exports = router;
