@@ -146,7 +146,7 @@ export const fetchDebates = async () => {
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-  
+
       return await response.json();
     } catch (error) {
       console.error('Fetching users error:', error);
@@ -322,7 +322,7 @@ export const postComment = async (debateId, commentData) => {
   
   export const suspendUser = async (userId) => {
     try {
-      console.log(`${API_BASE_URL}/api/moderation/user/${userId}/suspend`);
+      // console.log(`${API_BASE_URL}/api/moderation/user/${userId}/suspend`);
       const response = await fetch(`${API_BASE_URL}/api/moderation/user/${userId}/suspend`, {
         method: 'PATCH',
         headers: {
@@ -338,7 +338,7 @@ export const postComment = async (debateId, commentData) => {
   
   export const banUser = async (userId) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/user/${userId}/ban`, {
+      const response = await fetch(`${API_BASE_URL}/api/moderation/user/${userId}/ban`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -353,7 +353,7 @@ export const postComment = async (debateId, commentData) => {
   
   export const warnUser = async (userId) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/user/${userId}/warn`, {
+      const response = await fetch(`${API_BASE_URL}/api/moderation/user/${userId}/warn`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -368,7 +368,7 @@ export const postComment = async (debateId, commentData) => {
   
 export const reportContent = async (reportData) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/debate`, {
+    const response = await fetch(`${API_BASE_URL}/api/moderation/debate`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

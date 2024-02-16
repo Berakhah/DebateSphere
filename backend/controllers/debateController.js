@@ -147,7 +147,7 @@ const debateController = {
             const debates = await db.Debate.findAll({
                 order: [['dateTime', 'DESC']] // Assuming you want the latest debates first
             });
-    
+            console.log(debates, "debate list");
             res.status(200).json(debates);
         } catch (error) {
             console.error("Error fetching all debates:", error);

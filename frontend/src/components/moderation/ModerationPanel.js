@@ -172,19 +172,19 @@ const ModerationPanel = () => {
               <p className="text-sm text-gray-500">{user.email}</p>
               <div className="flex justify-between mt-2">
                 <button
-                  onClick={() => handleSuspendUser(user.id, user.username)}
+                  onClick={() => handleSuspendUser(user.userId, user.username)}
                   className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 focus:outline-none focus:bg-yellow-600"
                 >
                   Suspend
                 </button>
                 <button
-                  onClick={() => handleBanUser(user.id, user.username)}
+                  onClick={() => handleBanUser(user.userId, user.username)}
                   className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 focus:outline-none focus:bg-red-600"
                 >
                   Ban
                 </button>
                 <button
-                  onClick={() => handleWarnUser(user.id, user.username)}
+                  onClick={() => handleWarnUser(user.userId, user.username)}
                   className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
                 >
                   Warn

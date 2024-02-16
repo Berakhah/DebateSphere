@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-// import './Register.css'; // Ensure you have corresponding CSS for styling
 import { registerUser } from '../../api/api';
 import {useNavigate} from 'react-router-dom';
 

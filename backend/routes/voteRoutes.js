@@ -5,13 +5,13 @@ const { authenticate } = require('../middleware/authMiddleware');
 
 
 router.post('/debates/:debateId/arguments/:argumentId/vote', 
-authenticate, 
+// authenticate, 
 voteController.submitVote);
 router.put('/debates/:debateId/arguments/:argumentId/vote', 
-authenticate, 
+// authenticate, 
 voteController.updateVote);
 router.delete('/debates/:debateId/arguments/:argumentId/vote', 
-authenticate,
+// authenticate,
  voteController.revokeVote);
 
 module.exports = router;
